@@ -21,7 +21,9 @@ def sphere_test(data):
     return f_x
 
 
-def rastrigin_test(A, n, data):
+def rastrigin_test(data, A=10):
+    n = data.shape[1]
+
     d1 = np.square(data)
     arg_cos = 2 * np.pi * data
     cos = np.cos(arg_cos)
@@ -77,30 +79,30 @@ def cem(domain, population_size, elite_set_ratio, obj_fun, iter = 100):
 
 
 ################################################################################
+
+
 n = 2
 A = 10
 
-x = np.random.uniform(-5, 5, 100)
-y = np.random.uniform(-5, 5, 100)
+# (a) Generate an 2D contour plot of 2-dimensional Sphere function
+x = np.linspace(-5, 5, 100)
+y = np.linspace(-5, 5, 100)
 
-x_ = sorted(x)
-y_ = sorted(y)
-
-X, Y = np.meshgrid(x_, y_)
+X, Y = np.meshgrid(x, y)
 data = np.dstack((X, Y))
 
-# (a) Generate an 2D contour plot of 2-dimensional Sphere function
 S = sphere_test(data)
 
-plt.contour(data[:, :, 0], data[:, :, 1], S)
-plt.plot(x, y, 'ko', ms=3)
+plt.contour(X, Y, S)
+# plt.plot(X, Y, 'ko', ms=3)
 plt.show()
 
 # (b) Generate an 2D contour plot of 2-dimensional Rastrigin function
-R = rastrigin_test(A, n, data)
+R = rastrigin_test(data)
 
-plt.contour(data[:, :, 0], data[:, :, 1], R)
-plt.plot(x, y, 'ko', ms=3)
+plt.contour(X, Y, R)
+# plt.plot(X, Y, 'ko', ms=3)
+plt.show()
 plt.show()
 
 # (c) For each test function, uniformly sample 100 points in the domain, evaluate them with the test function and
