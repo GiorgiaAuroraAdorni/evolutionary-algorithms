@@ -32,29 +32,48 @@ def rastrigin_test(A, n, data):
     return np.sum([a1, a2])
 
 
-def cem(gaussian_distrib, mean, cov):
-    # Initialize parameters
-    mu = -6
-    sigma2 = 100
-    t = 0
-    maxits = 100
-    N = 100
-    Ne = 10
-    # While maxits not exceeded and not converged
-    while (t < maxits) and (sigma2 > epsilon):
-        # Obtain N samples from current sampling distribution
-        X = SampleGaussian(mu, sigma2, N)
-        # Evaluate objective function at sampled points
-        S = exp(-(X - 2) ^ 2) + 0.8 * np.exp(-(X + 2) ^ 2)
-        # Sort X by objective function values in descending order
-        X = sort(X, S)
-        # Update parameters of sampling distribution
-        mu = mean(X(1:Ne))
-        sigma2 = var(X(1:Ne))
-        t = t + 1
-    # Return mean of final sampling distribution as solution
-    return mu
+def cem(domain, population_size, elite_set_ratio, obj_fun, iter = 100):
+    """
 
+    :param d:
+    :param N:
+    :param obj_fun:
+    :param p:
+    :return mean:
+    """
+    # Initialise parameters
+    # Note that you can uniformly sample the initial population parameters as long as they are reasonably far from
+    # the global optimum.
+    mean = np.random.uniform(-5, 5, domain)
+    variance = np.random.uniform(0, 5, domain)
+
+    max = np.zeros(iter)
+    min = np.zeros(iter)
+
+    for i in range(iter):
+        # Obtain n sample from a normal distribution
+        sample = np.random.normal(mean, variance, [population_size, domain])
+
+        # Evaluate objective function on an objective function
+        fitness = obj_fun(sample)
+
+        min[i] = np.min(fitness)
+        max[i] = np.max(fitness)
+
+        # Sort sample by objective function values in descending order
+        idx = np.argsort(fitness)
+        fittest = sample[idx]
+
+        # Elite set
+        p = np.rint(population_size * elite_set_ratio).astype(np.int)
+        elite = fittest[:p]
+
+        # Refit a new Gaussian distribution from the elite set
+        mean = np.mean(elite, axis=0)
+        variance = np.std(elite, axis=0)
+
+    # Return mean of final sampling distribution as solution
+    return mean, min, max
 
 
 ################################################################################
