@@ -101,25 +101,26 @@ def cem(obj_fun, domain, population_size, elite_set_ratio, iter):
     mean = np.random.uniform(-5, 5, domain)
     variance = np.random.uniform(0, 5, domain)
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+    max = np.zeros(iter)
+    min = np.zeros(iter)
 
     for i in range(iter):
         # Obtain n sample from a normal distribution
         sample = np.random.normal(mean, variance, [population_size, domain])
 
-# (a) Run CEM 3 times for both of test functions with 100-dimensional domain.
-run = 3
+        # Evaluate objective function on an objective function
+        fitness = obj_fun(sample)
 
-for i in range(run):
-    sphere_mean, sphere_min, sphere_max = cem(domain, population_size, elite_set_ratio, sphere_test)
-    rastrigin_mean, rastrigin_min, rastrigin_max = cem(domain, population_size, elite_set_ratio, rastrigin_test)
+        min[i] = np.min(fitness)
+        max[i] = np.max(fitness)
 
-    print(sphere_mean)
-    print(rastrigin_mean)
+        # Sort sample by objective function values in descending order
+        idx = np.argsort(fitness)
+        fittest = sample[idx]
 
-# (b) Try different population size and elite set ratio and see what best performance you can obtain.
-population_size = 50
-elite_set_ratio = 0.20
+        # Elite set
+        p = np.rint(population_size * elite_set_ratio).astype(np.int)
+        elite = fittest[:p]
 
         # PLOT
         plt.figure(1)
@@ -132,19 +133,16 @@ elite_set_ratio = 0.20
         plt.title('generation ' + str(i))
         plt.pause(0.1)
 
-for i in range(run):
-    sphere_mean, sphere_min, sphere_max = cem(domain, population_size, elite_set_ratio, sphere_test)
-    rastrigin_mean, rastrigin_min, rastrigin_max = cem(domain, population_size, elite_set_ratio, rastrigin_test)
+        # Refit a new Gaussian distribution from the elite set
+        mean = np.mean(elite, axis=0)
+        variance = np.std(elite, axis=0)
 
-    print(sphere_mean)
-    print(rastrigin_mean)
+    # Return mean of final sampling distribution as solution
+    return mean, min, max
 
 
 def run_cem(experiment, run=3, domain=100, population_size=30, elite_set_ratio=0.20, iter=100):
     """
-for i in range(run):
-    sphere_mean, sphere_min, sphere_max = cem(domain, population_size, elite_set_ratio, sphere_test)
-    rastrigin_mean, rastrigin_min, rastrigin_max = cem(domain, population_size, elite_set_ratio, rastrigin_test)
 
     :param run:
     :param domain:
@@ -160,7 +158,6 @@ for i in range(run):
     avg_rastrigin_max = 0
 
     for i in range(run):
-# What is the minimum number of generations that you can obtain a solution close enough to the global optimum?
         sphere_mean, sphere_min, sphere_max = cem(sphere_test, domain, population_size, elite_set_ratio, iter)
         rastrigin_mean, rastrigin_min, rastrigin_max = cem(sphere_test, domain, population_size, elite_set_ratio, iter)
 
@@ -181,15 +178,29 @@ for i in range(run):
     plot_fitness(experiment, 'Rastrigin', iterator, avg_rastrigin_max, avg_rastrigin_min, 'Rastrigin Fitness')
 
 
+def nes(obj_fun, domain, population_size, elite_set_ratio, iter):
+    """
 
-R_eval = rastrigin_test(xy)
+    :param domain:
+    :param population_size:
+    :param elite_set_ratio:
+    :param obj_fun:
+    :param iter:
+    :return mean:
+    """
+    # TODO
+    #  Initialise parameters
+    #  Note that you can uniformly sample the initial population parameters as long as they are reasonably far from
+    #  the global optimum.
+    mean = np.random.uniform(-5, 5, domain)
+    variance = np.random.uniform(0, 5, domain)
 
     max = np.zeros(iter)
     min = np.zeros(iter)
 
-domain = 100
-population_size = 30
-elite_set_ratio = 0.20
+    for i in range(iter):
+        # TODO Obtain n sample from a normal distribution
+        sample = np.random.multivariate_normal(mean, variance, [population_size, domain])
 
         # Evaluate objective function on an objective function
         fitness = obj_fun(sample)
@@ -197,43 +208,79 @@ elite_set_ratio = 0.20
         min[i] = np.min(fitness)
         max[i] = np.max(fitness)
 
-population_size = 30
-elite_set_ratio = 0.30
+        # Sort sample by objective function values in descending order
+        idx = np.argsort(fitness)
+        fittest = sample[idx]
 
-# (c) Try different number of generations.
-population_size = 30
-elite_set_ratio = 0.20
+        # Elite set
+        p = np.rint(population_size * elite_set_ratio).astype(np.int)
+        elite = fittest[:p]
 
         # Refit a new Gaussian distribution from the elite set
         mean = np.mean(elite, axis=0)
         variance = np.std(elite, axis=0)
 
-    print(sphere_mean)
-    print(rastrigin_mean)
+    # Return mean of final sampling distribution as solution
+    return mean, min, max
+
+
+def cma_es(obj_fun, domain, population_size, elite_set_ratio, iter):
+    """
+
+    :param domain:
+    :param population_size:
+    :param elite_set_ratio:
+    :param obj_fun:
+    :param iter:
+    :return mean:
+    """
+    # Initialise parameters
+    # Note that you can uniformly sample the initial population parameters as long as they are reasonably far from
+    # the global optimum.
+    # TODO
+    mean = np.random.uniform(-5, 5, domain)
+
+    cov_matrix = np.random.normal(0, 5, [domain, domain])
+
+    cov_matrix = np.cov(cov_matrix, bias=True)  # bias ?
+    # cov_matrix = (cov_matrix + np.transpose(cov_matrix)) / 2
+
+    max = np.zeros(iter)
+    min = np.zeros(iter)
+
+    for i in range(iter):
+        # TODO Obtain n sample from a normal distribution
+        sample = np.random.multivariate_normal(mean, cov_matrix, [population_size, domain])
+
+        # Evaluate objective function on an objective function
+        fitness = obj_fun(sample)
+
+        min[i] = np.min(fitness)
+        max[i] = np.max(fitness)
 
         # Sort sample by objective function values in descending order
         idx = np.argsort(fitness)
         fittest = sample[idx]
 
 
-    print(sphere_mean)
-    print(rastrigin_mean)
+        # TODO Using only the best solutions, along with the mean of the current generation (the green dot),
+        #  calculate the covariance matrix of the next generation.
+        #  Sample a new set of candidate solutions using the updated mean and covariance matrix
 
         # Elite set
         p = np.rint(population_size * elite_set_ratio).astype(np.int)
         elite = fittest[:p]
 
-for i in range(run):
-    sphere_mean, sphere_min, sphere_max = cem(domain, population_size, elite_set_ratio, sphere_test, iter=50)
-    rastrigin_mean, rastrigin_min, rastrigin_max = cem(domain, population_size, elite_set_ratio, rastrigin_test, iter=50)
+        # TODO Refit a new Gaussian distribution from the elite set
+        #  save mean
+        mean = np.mean(elite, axis=0)
+        variance = np.std(elite, axis=0)
 
     # Return mean of final sampling distribution as solution
     return mean, min, max
 
 
-# (d) For each test function, plot the best and the worse fitness for each generation (averaged over 3 runs).
-avg_sphere_min = 0
-avg_rastrigin_min = 0
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 1 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
