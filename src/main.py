@@ -237,20 +237,19 @@ def cma_es(obj_fun, domain, population_size, elite_set_ratio, iter):
     # Initialise parameters
     # Note that you can uniformly sample the initial population parameters as long as they are reasonably far from
     # the global optimum.
-    # TODO
+
     mean = np.random.uniform(-5, 5, domain)
 
-    cov_matrix = np.random.normal(0, 5, [domain, domain])
-
-    cov_matrix = np.cov(cov_matrix, bias=True)  # bias ?
-    # cov_matrix = (cov_matrix + np.transpose(cov_matrix)) / 2
+    cov_matrix = np.random.uniform(0, 5, [domain, domain])
+    # cov_matrix = np.diag(np.random.uniform(0, 5, domain))
+    cov_matrix = np.cov(cov_matrix)
 
     max = np.zeros(iter)
     min = np.zeros(iter)
 
     for i in range(iter):
-        # TODO Obtain n sample from a normal distribution
-        sample = np.random.multivariate_normal(mean, cov_matrix, [population_size, domain])
+        # Obtain n sample from a normal multivariate distribution
+        sample = np.random.multivariate_normal(mean, cov_matrix, population_size)
 
         # Evaluate objective function on an objective function
         fitness = obj_fun(sample)
@@ -262,19 +261,35 @@ def cma_es(obj_fun, domain, population_size, elite_set_ratio, iter):
         idx = np.argsort(fitness)
         fittest = sample[idx]
 
-
-        # TODO Using only the best solutions, along with the mean of the current generation (the green dot),
-        #  calculate the covariance matrix of the next generation.
-        #  Sample a new set of candidate solutions using the updated mean and covariance matrix
-
         # Elite set
         p = np.rint(population_size * elite_set_ratio).astype(np.int)
         elite = fittest[:p]
 
+        # PLOT
+        plt.figure(1)
+        plt.clf()
+
+        plot_2d_contour(obj_fun)
+        plt.plot(sample[:, 0], sample[:, 1], 'ko')
+        plt.xlim([-5, 5])
+        plt.ylim([-5, 5])
+        plt.title('generation ' + str(i))
+        plt.pause(0.1)
+
         # TODO Refit a new Gaussian distribution from the elite set
         #  save mean
+        # TODO Using only the best solutions, along with the mean of the current generation (the green dot),
+        #  calculate the covariance matrix of the next generation.
+        #  Sample a new set of candidate solutions using the updated mean and covariance matrix
+
+        # for i in range(domain):
+        #     for j in range(domain):
+        #         cov_matrix[i][j] = np.sum((elite[:, i] - mean[i]) * (elite[:, j] - mean[j]))
+
+        diff = elite - mean
+        cov_matrix = np.matmul(diff.T, diff) / elite.shape[0]
+
         mean = np.mean(elite, axis=0)
-        variance = np.std(elite, axis=0)
 
     # Return mean of final sampling distribution as solution
     return mean, min, max
