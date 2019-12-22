@@ -178,12 +178,11 @@ def run_cem(experiment, run=3, domain=100, population_size=30, elite_set_ratio=0
     plot_fitness(experiment, 'Rastrigin', iterator, avg_rastrigin_max, avg_rastrigin_min, 'Rastrigin Fitness')
 
 
-def nes(obj_fun, domain, population_size, elite_set_ratio, iter):
+def nes(obj_fun, dim_domain, population_size, elite_set_ratio, learning_rate, iteration, out_dir):
     """
 
-    :param domain:
+    :param dim_domain:
     :param population_size:
-    :param elite_set_ratio:
     :param obj_fun:
     :param iter:
     :return mean:
@@ -192,15 +191,15 @@ def nes(obj_fun, domain, population_size, elite_set_ratio, iter):
     #  Initialise parameters
     #  Note that you can uniformly sample the initial population parameters as long as they are reasonably far from
     #  the global optimum.
-    mean = np.random.uniform(-5, 5, domain)
-    variance = np.random.uniform(0, 5, domain)
+    mean = np.random.uniform(-5, 5, dim_domain)
+    variance = np.random.uniform(0, 1, dim_domain)
 
-    max = np.zeros(iter)
-    min = np.zeros(iter)
+    max = np.zeros(iteration)
+    min = np.zeros(iteration)
 
-    for i in range(iter):
-        # TODO Obtain n sample from a normal distribution
-        sample = np.random.multivariate_normal(mean, variance, [population_size, domain])
+    for i in range(iteration):
+        # Obtain n sample from a normal distribution
+        sample = np.random.normal(mean, variance, [population_size, dim_domain])
 
         # Evaluate objective function on an objective function
         fitness = obj_fun(sample)
@@ -208,17 +207,22 @@ def nes(obj_fun, domain, population_size, elite_set_ratio, iter):
         min[i] = np.min(fitness)
         max[i] = np.max(fitness)
 
-        # Sort sample by objective function values in descending order
-        idx = np.argsort(fitness)
-        fittest = sample[idx]
+        # TODO Calculate the log derivatives
+        log_derivative_mu = (sample - mean) / (variance ** 2)
+        log_derivative_sigma = ((sample - mean) ** 2 - (variance ** 2)) / variance ** 3
 
-        # Elite set
-        p = np.rint(population_size * elite_set_ratio).astype(np.int)
-        elite = fittest[:p]
+        J_gradient_mu = np.sum(fitness[..., np.newaxis] * log_derivative_mu, axis=0) / sample.shape[0]
+        J_gradient_sigma = np.sum(fitness[..., np.newaxis] * log_derivative_sigma, axis=0) / sample.shape[0]
 
-        # Refit a new Gaussian distribution from the elite set
-        mean = np.mean(elite, axis=0)
-        variance = np.std(elite, axis=0)
+        F_mu = np.matmul(log_derivative_mu.T, log_derivative_mu) / sample.shape[0]
+        F_sigma = np.matmul(log_derivative_sigma.T, log_derivative_sigma) / sample.shape[0]
+
+        # PLOT
+        plot_generation(out_dir, i, iteration, min, obj_fun, sample)
+
+        # TODO Refit a new Gaussian distribution from the elite set
+        mean = mean - learning_rate * np.matmul(np.linalg.inv(F_mu), J_gradient_mu)
+        variance = variance - learning_rate * np.matmul(np.linalg.inv(F_sigma), J_gradient_sigma)
 
     # Return mean of final sampling distribution as solution
     return mean, min, max
