@@ -57,7 +57,7 @@ def plot_2d_contour(obj_function):
     # plt.plot(X, Y, 'ko', ms=3)
 
 
-def plot_fitness(experiment, name, x, y1, y2, title):
+def plot_fitness(out_dir, name, x, y1, y2, title):
     """
     (d) For each test function, plot the best and the worse fitness for each generation (averaged over 3 runs).
     :param name:
@@ -66,29 +66,57 @@ def plot_fitness(experiment, name, x, y1, y2, title):
     :param y2:
     :param title:
     """
-    out_dir = 'out/img/' + str(experiment) + '/'
-    check_dir(out_dir)
 
-    plt.xlabel('generations', fontsize=11)
-    plt.ylabel('fitness values', fontsize=11)
+    plt.figure()
+    plt.grid()
 
     # Let x-axis be the generations and y-axis be the fitness values.
     plt.plot(x, y1, label='avg_' + name.lower() + '_max')
     plt.plot(x, y2, label='avg_' + name.lower() + '_min')
 
+    plt.xlabel('generations', fontsize=11)
+    plt.ylabel('fitness values', fontsize=11)
+
+    plt.gca().set_ylim(bottom=-70)
+
     plt.legend()
 
     plt.title(title, weight='bold', fontsize=12)
-    plt.savefig(out_dir + name + '-fitness.pdf')
-
-    plt.show()
+    plt.savefig(out_dir + 'fitness.pdf')
     plt.close()
 
 
-def cem(obj_fun, domain, population_size, elite_set_ratio, iter):
+def plot_generation(out_dir, name, i, iteration, min, obj_fun, sample):
     """
 
-    :param domain:
+    :param i:
+    :param iteration:
+    :param min:
+    :param obj_fun:
+    :param sample:
+    :return:
+    """
+
+    if i % (iteration / 10) == 0:
+        plt.figure(1)
+        plt.clf()
+
+        plot_2d_contour(obj_fun)
+        plt.plot(sample[:, 0], sample[:, 1], 'ko')
+        plt.xlim([-5, 5])
+        plt.ylim([-5, 5])
+        plt.title(name + '\ngeneration: ' + str(i + 1) + '\nmin: ' + str(min[i]))
+
+        # plt.pause(0.1)
+        plt.savefig(out_dir + name + '-generation-contour-' + str(i) + '.pdf')
+
+    plt.close()
+
+
+def cem(obj_fun, dim_domain, population_size, elite_set_ratio, learning_rate, iteration, out_dir, name):
+    """
+
+    :param dim_domain:
     :param population_size:
     :param elite_set_ratio:
     :param obj_fun:
@@ -98,99 +126,6 @@ def cem(obj_fun, domain, population_size, elite_set_ratio, iter):
     # Initialise parameters
     # Note that you can uniformly sample the initial population parameters as long as they are reasonably far from
     # the global optimum.
-    mean = np.random.uniform(-5, 5, domain)
-    variance = np.random.uniform(0, 5, domain)
-
-    max = np.zeros(iter)
-    min = np.zeros(iter)
-
-    for i in range(iter):
-        # Obtain n sample from a normal distribution
-        sample = np.random.normal(mean, variance, [population_size, domain])
-
-        # Evaluate objective function on an objective function
-        fitness = obj_fun(sample)
-
-        min[i] = np.min(fitness)
-        max[i] = np.max(fitness)
-
-        # Sort sample by objective function values in descending order
-        idx = np.argsort(fitness)
-        fittest = sample[idx]
-
-        # Elite set
-        p = np.rint(population_size * elite_set_ratio).astype(np.int)
-        elite = fittest[:p]
-
-        # PLOT
-        plt.figure(1)
-        plt.clf()
-
-        plot_2d_contour(obj_fun)
-        plt.plot(sample[:, 0], sample[:, 1], 'ko')
-        plt.xlim([-5, 5])
-        plt.ylim([-5, 5])
-        plt.title('generation ' + str(i))
-        plt.pause(0.1)
-
-        # Refit a new Gaussian distribution from the elite set
-        mean = np.mean(elite, axis=0)
-        variance = np.std(elite, axis=0)
-
-    # Return mean of final sampling distribution as solution
-    return mean, min, max
-
-
-def run_cem(experiment, run=3, domain=100, population_size=30, elite_set_ratio=0.20, iter=100):
-    """
-
-    :param run:
-    :param domain:
-    :param population_size:
-    :param elite_set_ratio:
-    :param iter:
-    :return:
-    """
-    avg_sphere_min = 0
-    avg_rastrigin_min = 0
-
-    avg_sphere_max = 0
-    avg_rastrigin_max = 0
-
-    for i in range(run):
-        sphere_mean, sphere_min, sphere_max = cem(sphere_test, domain, population_size, elite_set_ratio, iter)
-        rastrigin_mean, rastrigin_min, rastrigin_max = cem(sphere_test, domain, population_size, elite_set_ratio, iter)
-
-        avg_sphere_min += sphere_min
-        avg_rastrigin_min += rastrigin_min
-
-        avg_sphere_max += sphere_max
-        avg_rastrigin_max += rastrigin_max
-
-    avg_sphere_min /= run
-    avg_rastrigin_min /= run
-    avg_sphere_max /= run
-    avg_rastrigin_max /= run
-
-    iterator = np.arange(iter)
-
-    plot_fitness(experiment, 'Sphere', iterator, avg_sphere_max, avg_sphere_min, 'Sphere Fitness')
-    plot_fitness(experiment, 'Rastrigin', iterator, avg_rastrigin_max, avg_rastrigin_min, 'Rastrigin Fitness')
-
-
-def nes(obj_fun, dim_domain, population_size, elite_set_ratio, learning_rate, iteration, out_dir):
-    """
-
-    :param dim_domain:
-    :param population_size:
-    :param obj_fun:
-    :param iter:
-    :return mean:
-    """
-    # TODO
-    #  Initialise parameters
-    #  Note that you can uniformly sample the initial population parameters as long as they are reasonably far from
-    #  the global optimum.
     mean = np.random.uniform(-5, 5, dim_domain)
     variance = np.random.uniform(0, 1, dim_domain)
 
@@ -207,7 +142,53 @@ def nes(obj_fun, dim_domain, population_size, elite_set_ratio, learning_rate, it
         min[i] = np.min(fitness)
         max[i] = np.max(fitness)
 
-        # TODO Calculate the log derivatives
+        # Sort sample by objective function values in descending order
+        idx = np.argsort(fitness)
+        fittest = sample[idx]
+
+        # Elite set
+        p = np.rint(population_size * elite_set_ratio).astype(np.int)
+        elite = fittest[:p]
+
+        # PLOT
+        plot_generation(out_dir, name, i, iteration, min, obj_fun, sample)
+
+        # Refit a new Gaussian distribution from the elite set
+        mean = np.mean(elite, axis=0)
+        variance = np.std(elite, axis=0)
+
+    # Return mean of final sampling distribution as solution
+    return mean, min, max
+
+
+def nes(obj_fun, dim_domain, population_size, elite_set_ratio, learning_rate, iteration, out_dir, name):
+    """
+
+    :param dim_domain:
+    :param population_size:
+    :param obj_fun:
+    :param iter:
+    :return mean:
+    """
+    # Initialise parameters
+    mean = np.random.uniform(-5, 5, dim_domain)
+    # variance = np.full(dim_domain, 1)
+    variance = np.random.uniform(1, 1, dim_domain)
+
+    max = np.zeros(iteration)
+    min = np.zeros(iteration)
+
+    for i in range(iteration):
+        # Obtain n sample from a normal distribution
+        sample = np.random.normal(mean, variance, [population_size, dim_domain])
+
+        # Evaluate objective function on an objective function
+        fitness = obj_fun(sample)
+
+        min[i] = np.min(fitness)
+        max[i] = np.max(fitness)
+
+        # Calculate the log derivatives
         log_derivative_mu = (sample - mean) / (variance ** 2)
         log_derivative_sigma = ((sample - mean) ** 2 - (variance ** 2)) / variance ** 3
 
@@ -218,9 +199,9 @@ def nes(obj_fun, dim_domain, population_size, elite_set_ratio, learning_rate, it
         F_sigma = np.matmul(log_derivative_sigma.T, log_derivative_sigma) / sample.shape[0]
 
         # PLOT
-        plot_generation(out_dir, i, iteration, min, obj_fun, sample)
+        plot_generation(out_dir, name, i, iteration, min, obj_fun, sample)
 
-        # TODO Refit a new Gaussian distribution from the elite set
+        # Update mean and variance
         mean = mean - learning_rate * np.matmul(np.linalg.inv(F_mu), J_gradient_mu)
         variance = variance - learning_rate * np.matmul(np.linalg.inv(F_sigma), J_gradient_sigma)
 
@@ -228,10 +209,10 @@ def nes(obj_fun, dim_domain, population_size, elite_set_ratio, learning_rate, it
     return mean, min, max
 
 
-def cma_es(obj_fun, domain, population_size, elite_set_ratio, iter):
+def cma_es(obj_fun, dim_domain, population_size, elite_set_ratio, learning_rate, iteration, out_dir, name):
     """
 
-    :param domain:
+    :param dim_domain:
     :param population_size:
     :param elite_set_ratio:
     :param obj_fun:
@@ -242,16 +223,13 @@ def cma_es(obj_fun, domain, population_size, elite_set_ratio, iter):
     # Note that you can uniformly sample the initial population parameters as long as they are reasonably far from
     # the global optimum.
 
-    mean = np.random.uniform(-5, 5, domain)
+    mean = np.random.uniform(-5, 5, dim_domain)
+    cov_matrix = np.diag(np.random.uniform(0, 1, dim_domain))
 
-    cov_matrix = np.random.uniform(0, 5, [domain, domain])
-    # cov_matrix = np.diag(np.random.uniform(0, 5, domain))
-    cov_matrix = np.cov(cov_matrix)
+    max = np.zeros(iteration)
+    min = np.zeros(iteration)
 
-    max = np.zeros(iter)
-    min = np.zeros(iter)
-
-    for i in range(iter):
+    for i in range(iteration):
         # Obtain n sample from a normal multivariate distribution
         sample = np.random.multivariate_normal(mean, cov_matrix, population_size)
 
@@ -270,24 +248,12 @@ def cma_es(obj_fun, domain, population_size, elite_set_ratio, iter):
         elite = fittest[:p]
 
         # PLOT
-        plt.figure(1)
-        plt.clf()
+        plot_generation(out_dir, name, i, iteration, min, obj_fun, sample)
 
-        plot_2d_contour(obj_fun)
-        plt.plot(sample[:, 0], sample[:, 1], 'ko')
-        plt.xlim([-5, 5])
-        plt.ylim([-5, 5])
-        plt.title('generation ' + str(i))
-        plt.pause(0.1)
+        # Refit a new Gaussian distribution from the elite set
 
-        # TODO Refit a new Gaussian distribution from the elite set
-        #  save mean
-        # TODO Using only the best solutions, along with the mean of the current generation (the green dot),
-        #  calculate the covariance matrix of the next generation.
-        #  Sample a new set of candidate solutions using the updated mean and covariance matrix
-
-        # for i in range(domain):
-        #     for j in range(domain):
+        # for i in range(dim_domain):
+        #     for j in range(dim_domain):
         #         cov_matrix[i][j] = np.sum((elite[:, i] - mean[i]) * (elite[:, j] - mean[j]))
 
         diff = elite - mean
@@ -298,6 +264,55 @@ def cma_es(obj_fun, domain, population_size, elite_set_ratio, iter):
     # Return mean of final sampling distribution as solution
     return mean, min, max
 
+
+def run(algorithm, experiment, run=3, dim_domain=100, population_size=30, elite_set_ratio=0.20,
+        learning_rate=0.00001, iteration=100):
+    """
+
+    :param algorithm:
+    :param experiment:
+    :param run:
+    :param dim_domain:
+    :param population_size:
+    :param elite_set_ratio:
+    :param learning_rate:
+    :param iteration:
+    :return:
+    """
+
+    out_dir_sphere = 'out/' + algorithm.__name__ + '/' + str(experiment) + '/sphere/'
+    out_dir_rastrigin = 'out/' + algorithm.__name__ +  '/' + str(experiment) + '/rastrigin/'
+    check_dir(out_dir_sphere)
+    check_dir(out_dir_rastrigin)
+
+    avg_sphere_min = 0
+    avg_rastrigin_min = 0
+
+    avg_sphere_max = 0
+    avg_rastrigin_max = 0
+
+    for i in range(run):
+        sphere_mean, sphere_min, sphere_max = algorithm(sphere_test, dim_domain, population_size, elite_set_ratio,
+                                                        learning_rate, iteration, out_dir_sphere, algorithm.__name__)
+        rastrigin_mean, rastrigin_min, rastrigin_max = algorithm(rastrigin_test, dim_domain, population_size,
+                                                                 elite_set_ratio, learning_rate, iteration,
+                                                                 out_dir_rastrigin, algorithm.__name__)
+
+        avg_sphere_min += sphere_min
+        avg_rastrigin_min += rastrigin_min
+
+        avg_sphere_max += sphere_max
+        avg_rastrigin_max += rastrigin_max
+
+    avg_sphere_min /= run
+    avg_rastrigin_min /= run
+    avg_sphere_max /= run
+    avg_rastrigin_max /= run
+
+    iterator = np.arange(iteration)
+
+    plot_fitness(out_dir_sphere, 'Sphere', iterator, avg_sphere_max, avg_sphere_min, 'Sphere Fitness')
+    plot_fitness(out_dir_rastrigin, 'Rastrigin', iterator, avg_rastrigin_max, avg_rastrigin_min, 'Rastrigin Fitness')
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -323,32 +338,85 @@ def cma_es(obj_fun, domain, population_size, elite_set_ratio, iter):
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 2 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-# # (a) Run CEM 3 times for both of test functions with 100-dimensional domain.
-# run_cem(experiment=1)
-#
-# # (b) Try different population size and elite set ratio and see what best performance you can obtain.
-# run_cem(experiment=2, population_size=50)
-# run_cem(experiment=3, elite_set_ratio=0.30)
-#
-# # (c) Try different number of generations.
-# run_cem(experiment=4, iter=50)
-# run_cem(experiment=5, iter=30)
+# # (a) Run CEM 3 times for both of test functions with 100-dimensional dim_domain.
+# run(cem, experiment='baseline')
 
-# cma_es(sphere_test, 100, 30, 0.20, 100)
+# # (b) Try different population size and elite set ratio and see what best performance you can obtain.
+# run(cem, experiment='pop_size-100', population_size=100)
+# run(cem, experiment='pop_size-1000', population_size=1000)
+#
+# run(cem, experiment='elite-30', elite_set_ratio=0.30)
+# run(cem, experiment='elite-10', elite_set_ratio=0.10)
+#
+# run(cem, experiment='pop_size-100+elite-30', population_size=100, elite_set_ratio=0.30)
+# run(cem, experiment='pop_size-100+elite-10', population_size=100, elite_set_ratio=0.10)
+#
+# run(cem, experiment='pop_size-1000+elite-30', population_size=1000, elite_set_ratio=0.30)
+# run(cem, experiment='pop_size-1000+elite-10', population_size=1000, elite_set_ratio=0.10)
+
+# # (c) Try different number of generations.
+# run(cem, experiment='iteration-50', iteration=50)
+# run(cem, experiment='iteration-30', iteration=30)
+#
+# run(cem, experiment='iteration-30+elite-10', elite_set_ratio=0.10, iteration=30)
+# run(cem, experiment='iteration-50+elite-10', elite_set_ratio=0.10, iteration=50)
+# run(cem, experiment='iteration-200+pop_size-1000+elite-30', population_size=1000, elite_set_ratio=0.30, iteration=200)
 
 # TODO What is the minimum number of generations that you can obtain a solution close enough to the global optimum?
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 3 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+# # (a) Run NES 3 times for both of test functions with 100-dimensional dim_domain. (i.e. n = 100)
+# # Note that you can uniformly sample the initial population parameters as long as they are reasonably far from the
+# # global optimum.
+run(nes, experiment='baseline')
 
-# (a) Run NES 3 times for both of test functions with 100-dimensional domain. (i.e. n = 100) Note that you can uniformly sample the initial population parameters as long as they are reasonably far from the global optimum.
+# # (b) Try different population size and learning rate and see what best performance you can obtain.
+run(nes, experiment='pop_size-100', population_size=100)
+run(nes, experiment='pop_size-1000', population_size=1000)
+
+run(nes, experiment='lr-01', learning_rate=0.01)
+run(nes, experiment='lr-0001', elite_set_ratio=0.0001)
+run(nes, experiment='lr-00001', elite_set_ratio=0.00001)
+
+run(nes, experiment='pop_size-100+lr-01', population_size=100, learning_rate=0.01)
+run(nes, experiment='pop_size-100+lr-0001', population_size=100, learning_rate=0.0001)
+run(nes, experiment='pop_size-100+lr-00001', population_size=100, learning_rate=0.00001)
+
+run(nes, experiment='pop_size-1000+lr-01', population_size=1000, learning_rate=0.01)
+run(nes, experiment='pop_size-1000+lr-0001', population_size=1000, learning_rate=0.0001)
+run(nes, experiment='pop_size-1000+lr-00001', population_size=1000, learning_rate=0.00001)
+
+# # (c) Try different number of generations.
+run(nes, experiment='iteration-2000', iteration=2000)
+run(nes, experiment='iteration-5000', iteration=5000)
+  
+run(nes, experiment='iteration-2000+pop_size-1000+lr-01', population_size=1000, learning_rate=0.01, iteration=2000)
+run(nes, experiment='iteration-5000+pop_size-1000+lr-01', population_size=1000, learning_rate=0.01, iteration=5000)
+
+run(nes, experiment='iteration-2000+pop_size-1000+lr-0001', population_size=1000, learning_rate=0.0001,
+    iteration=2000)
+run(nes, experiment='iteration-5000+pop_size-1000+lr-0001', population_size=1000, learning_rate=0.0001,
+    iteration=5000)
+
+run(nes, experiment='iteration-2000+pop_size-1000+lr-00001', population_size=1000, learning_rate=0.00001,
+    iteration=2000)
+run(nes, experiment='iteration-5000+pop_size-1000+lr-00001', population_size=1000, learning_rate=0.00001,
+    iteration=5000)
+
+# run(nes, experiment=2, dim_domain=50, population_size=1000, learning_rate=0.01, iteration=5000)
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 4 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# (a) Run CMA-ES 3 times for both of test functions with 100-dimensional domain. (i.e. n = 100) Note that you can uniformly sample the initial population parameters as long as they are reasonably far from the global optimum.
 # (b) Try different population size and learning rate and see what best performance you can obtain.
 # (c) Try different number of generations. What is the minimum number of gener- ations that you can obtain a solution close enough to the global optimum?
 # (d) For each test function, plot the best and the worse fitness for each generation (averaged over 3 runs). Let x-axis be the generations and y-axis be the fitness values. Note that this should be one single figure with two curves (one for best fitness and another for worst fitness).
 
+# run(cma_es, experiment=3)
+# cma_es(sphere_test, 2, 1000, 0.20, 100)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 5 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-
-cem(rastrigin_test, 100, 100, 0.2, 100)
-
-plt.show()
-plt.close()
+# (a) Plot the comparison of CEM, NES and CMA-ES for the best fitness in each generation. Note that this should be one single figure with three curves, each for one algorithm.
+# (b) Plot the comparison of CEM, NES and CMA-ES for the worst fitness in each generation. Note that this should be one single figure with three curves, each for one algorithm.
+# (c) For each test function, which algorithm is best? which is the worst?
