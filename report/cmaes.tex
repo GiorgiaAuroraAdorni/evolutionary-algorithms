@@ -1,39 +1,44 @@
 \section{Covariance Matrix Adaptation Evolution Strategy \\(CMA-ES)}
 
+The last algorithm implemented is the \textbf{Covariance Matrix Adaptation Evolution Strategy (CMA-ES)}. 
+
+Different execution of the algorithm has been performed using the same parameters employed with the first method. In Table \ref{tab:cmaes-param} are shown the different combinations of parameter used.
+
 \begin{figure}[htb]
 	\centering
 	
-	\begin{tabular}{lcccc}
+	\begin{tabular}{lccc}
 		\toprule
-		\textbf{experiment} & \textbf{domain} & \textbf{population} & \textbf{elite} &
+		\textbf{experiment} & \textbf{population} & \textbf{elite} &
 		\textbf{generations} \\
 		\midrule
-		\texttt{baseline 							}	& 100 & 30 	& 0.20 	& 100\\
-		\texttt{pop\_size-100 						}	& 100 & 100 	& 0.20 	& 100\\
-		\texttt{pop\_size-1000 						}	& 100 & 1000 	& 0.20 	& 100\\
-		\texttt{elite-30 							}	& 100 & 30 	& 0.30 	& 100\\
-		\texttt{elite-10 							}	& 100 & 30 	& 0.10 	& 100\\
-		\texttt{pop\_size-100+elite-30 				}	& 100 & 100 	& 0.30 	& 100\\
-		\texttt{pop\_size-100+elite-10 				}	& 100 & 100 	& 0.10 	& 100\\
-		\texttt{pop\_size-1000+elite-30 				}	& 100 & 1000 	& 0.30 	& 100\\
-		\texttt{pop\_size-1000+elite-10 				}	& 100 & 1000 	& 0.10 	& 100\\
-		\texttt{iter-50 						}	& 100 & 30 	& 0.20 	& 50\\
-		\texttt{iter-30 						}	& 100 & 30 	& 0.20 	& 30\\
-		\texttt{iter-30+elite-10 				}	& 100 & 30 	& 0.10 	& 30\\
-		\texttt{iter-50+elite-10 				}	& 100 & 30 	& 0.10 	& 50\\
-		\texttt{iter-200+pop\_size-1000+elite-30} 	& 100 & 1000 	& 0.30 	& 200\\	
+		\texttt{baseline 						}	 & 100 	& 0.20 	& 100\\
+		\texttt{pop\_size-1000 					}	 & 1000 	& 0.20 	& 100\\
+		\texttt{pop\_size-3000 					}	 & 3000 	& 0.20 	& 100\\
+		\texttt{elite-40 						}	 & 100 	& 0.40 	& 100\\
+		\texttt{elite-30 						}	 & 100 	& 0.30 	& 100\\
+		\texttt{elite-10 						}	 & 100 	& 0.10 	& 100\\
+		\texttt{pop\_size-1000+elite-40 		}	 & 1000 	& 0.40 	& 100\\
+		\texttt{pop\_size-1000+elite-30 		}	 & 1000 	& 0.30 	& 100\\
+		\texttt{pop\_size-1000+elite-10 		}	 & 1000 	& 0.10 	& 100\\
+		\texttt{pop\_size-3000+elite-40 		}	 & 3000 	& 0.40 	& 100\\
+		\texttt{pop\_size-3000+elite-30 		}	 & 3000 	& 0.30 	& 100\\
+		\texttt{pop\_size-3000+elite-10 		}	 & 3000 	& 0.10 	& 100\\
+		\texttt{iter-200 						}	 & 100 	& 0.20 	& 200\\
+		\texttt{iter-50 						}	 & 100 	& 0.20 	& 50\\
+		\texttt{iter-30 						}	 & 100 	& 0.20 	& 30\\
+		\texttt{iter-200+elite-30 				}	 & 100 	& 0.30 	& 200\\
+		\texttt{iter-200+pop\_size-3000+elite-30} 	 & 3000 	& 0.30 	& 200\\	
 		\bottomrule
 	\end{tabular}
 	\captionof{table}{CMA-ES parameters}
 	\label{tab:cmaes-param}
 \end{figure}
 
+The algorithm has been run 3 times for both of test functions. 
+In order to evaluate the performance, for each pair of experiment and test function, the best and the worse fitness for each generation (averaged over 3 runs) has been plotted. 
 
-Try different population size and learning rate and see what best performance you can obtain.
-
-Try different number of generations. What is the minimum number of gener- ations that you can obtain a solution close enough to the global optimum
-
-For each test function, plot the best and the worse fitness for each generation
+In Tables \ref{tab:cmaes-performance-s} and \ref{tab:cmaes-performance-r} are summarised the results. 
 
 \begin{figure}[htb]
 	\centering
@@ -42,24 +47,53 @@ For each test function, plot the best and the worse fitness for each generation
 		\toprule
 		\textbf{experiment} & \textbf{best fitness} & \textbf{worse fitness} & \textbf{avg run time} \\
 		\midrule
-		\texttt{baseline 						}	&  677.09 &                677.09 &                 0.57 sec \\
-		\texttt{pop\_size-100 					}	&   618.11 &                618.11 &                 0.65 sec \\
-		\texttt{pop\_size-1000 					}	&    78.54 &                 78.56 &                 1.21 sec \\
-		\texttt{elite-30 						}	&  690.86 &                690.86 &                 0.57 sec \\
-		\texttt{elite-10 						}	&  712.47 &                712.47 &                 0.61 sec \\
-		\texttt{pop\_size-100+elite-30 			}	&   611.05 &                611.06 &                 0.62 sec \\
-		\texttt{pop\_size-100+elite-10 			}	&   672.11 &                672.11 &                 0.62 sec \\
-		\texttt{pop\_size-1000+elite-30 		}	&    65.15 &                 65.25 &                 1.17 sec \\
-		\texttt{pop\_size-1000+elite-10 		}	&   150.28 &                150.28 &                 1.08 sec \\
-		\texttt{iter-50 						}	&  764.01 &                764.01 &                 0.43 sec \\
-		\texttt{iter-30 						}	&   768.3 &                 768.3 &                 0.39 sec \\
-		\texttt{iter-30+elite-10 				}	&  882.68 &                882.68 &                 0.39 sec \\
-		\texttt{iter-50+elite-10 				}	&  729.77 &                729.77 &                 0.42 sec \\
-		\texttt{iter-200+pop\_size-1000+elite-30} 	&    88.76 &                 88.77 &                 1.78 sec \\\bottomrule
+		\texttt{baseline 						}		&	567.81 &	 567.82 &	  0.63 sec \\
+		\texttt{pop\_size-1000 					}		  &	 92.09 &	  92.11 &	  1.14 sec \\
+		\texttt{pop\_size-3000 					}		  &	  0.01 &	   0.01 &	  2.56 sec \\
+		\texttt{elite-40 						}		&	586.48 &	 586.48 &	  0.75 sec \\
+		\texttt{elite-30 						}		&	570.19 &	 570.21 &	  0.86 sec \\
+		\texttt{elite-10 						}		&	657.87 &	 657.87 &	   0.6 sec \\
+		\texttt{pop\_size-1000+elite-40 		}	 &	 56.86 &	  57.09 &	   1.2 sec \\
+		\texttt{pop\_size-1000+elite-30 		}	 &	  40.8 &	  40.84 &	   1.2 sec \\
+		\texttt{pop\_size-1000+elite-10 		}	 &	132.82 &	 132.83 &	  1.09 sec \\
+		\texttt{pop\_size-3000+elite-40 		}	 &	   0.0 &	   0.01 &	  2.58 sec \\
+		\texttt{pop\_size-3000+elite-30 		}	 &	   0.0 &	    0.0 &	  2.43 sec \\
+		\texttt{pop\_size-3000+elite-10 		}	 &	   6.4 &	   6.41 &	   2.3 sec \\
+		\texttt{iter-200 						}		&	586.27 &	 586.27 &	  0.83 sec \\
+		\texttt{iter-50 						}		 &	609.34 &	 609.35 &	  0.47 sec \\
+		\texttt{iter-30 						}		 &	602.65 &	 602.69 &	  0.47 sec \\
+		\texttt{iter-200+elite-30 				}	&	 554.4 &	  554.4 &	  0.84 sec \\
+		\texttt{iter-200+pop\_size-3000+elite-30} 	 &	   0.0 &	    0.0 &	  4.87 sec \\
+		
+		\bottomrule
 	\end{tabular}
 	\captionof{table}{Sphere CME-AS performance}
-	\label{tab:cmeas-performance-s}
+	\label{tab:cmaes-performance-s}
 \end{figure}
+
+For the sphere function, it is possible to see that simply using a large enough population size the algorithm converges.
+
+In Figure \ref{fig:cmaes-s-fitness/baseline} is plotted the best and the worse fitness for each generation (averaged over 3 runs) for the baseline model. Below, in Figure \ref{fig:cmaes-s-fitness/3000} is plotted the fitness of the model that performs better with the sphere function.
+
+ 
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[b]{.6\textwidth}
+		\includegraphics[width=\linewidth]{../src/out/cma_es/baseline/sphere/fitness.pdf}	
+	\end{minipage}
+	\caption{Sphere fitness \texttt{baseline}}
+	\label{fig:cmaes-s-fitness/baseline}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[b]{.6\textwidth}
+		\includegraphics[width=\linewidth]{../src/out/cma_es/pop_size-3000/sphere/fitness.pdf}	
+	\end{minipage}
+	\caption{Sphere fitness \texttt{pop\_size-3000}}
+	\label{fig:cmaes-s-fitness/3000}
+\end{figure}
+
+For the rastrigin function, it is necessary not only to increase the size of the population but also the number of generations to allow the algorithm to converge.
 
 \begin{figure}[htb]
 	\centering
@@ -68,24 +102,54 @@ For each test function, plot the best and the worse fitness for each generation
 		\toprule
 		\textbf{experiment} & \textbf{best fitness} & \textbf{worse fitness} & \textbf{avg run time} \\
 		\midrule
-			\texttt{baseline 						}	&    1493.64 &               1493.64 &                 0.75 sec \\
-		\texttt{pop\_size-100 					}	&      1404.3 &                1404.3 &                 0.84 sec \\
-		\texttt{pop\_size-1000 					}	&      528.97 &                530.01 &                 1.59 sec \\
-		\texttt{elite-30 						}	&    1534.59 &               1534.59 &                 0.76 sec \\
-		\texttt{elite-10 						}	&    1641.93 &               1641.93 &                 0.93 sec \\
-		\texttt{pop\_size-100+elite-30 			}	&     1353.75 &               1353.77 &                 0.85 sec \\
-		\texttt{pop\_size-100+elite-10 			}	&     1464.23 &               1464.23 &                  0.8 sec \\
-		\texttt{pop\_size-1000+elite-30 		}	&      518.71 &                520.95 &                 1.57 sec \\
-		\texttt{pop\_size-1000+elite-10 		}	&      719.32 &                719.49 &                 1.46 sec \\
-		\texttt{iter-50 						}	&    1584.02 &               1584.07 &                 0.63 sec \\
-		\texttt{iter-30 						}	&    1569.96 &               1570.12 &                 0.59 sec \\
-		\texttt{iter-30+elite-10 				}	&    1641.79 &               1641.79 &                 0.59 sec \\
-		\texttt{iter-50+elite-10 				}	&    1627.19 &               1627.19 &                 0.63 sec \\
-		\texttt{iter-200+pop\_size-1000+elite-30} 	&      477.72 &                 477.8 &                 2.31 sec \\
+		\texttt{baseline 						}		&              1394.23 &	1394.23 &	  0.95 sec \\
+		\texttt{pop\_size-1000 					}		&	446.51 &	 447.11 &	  1.53 sec \\
+		\texttt{pop\_size-3000 					}		&	120.04 &	 126.67 &	  3.51 sec \\
+		\texttt{elite-40 						}		&              1298.12 &	1298.27 &	  0.86 sec \\
+		\texttt{elite-30 						}		&              1433.35 &	1433.38 &	  0.87 sec \\
+		\texttt{elite-10 						}		&              1385.37 &	1385.37 &	  0.82 sec \\
+		\texttt{pop\_size-1000+elite-40 		}	 &	443.78 &	 453.89 &	   1.6 sec \\
+		\texttt{pop\_size-1000+elite-30 		}	 &	390.73 &	 393.75 &	  1.58 sec \\
+		\texttt{pop\_size-1000+elite-10 		}	 &	550.56 &	 550.63 &	  1.51 sec \\
+		\texttt{pop\_size-3000+elite-40 		}	 &	400.15 &	 751.57 &	  3.42 sec \\
+		\texttt{pop\_size-3000+elite-30 		}	 &	161.26 &	 222.73 &	  3.17 sec \\
+		\texttt{pop\_size-3000+elite-10 		}	 &	228.41 &	 229.67 &	  3.04 sec \\
+		\texttt{iter-200 						}		&              1356.23 &	1356.23 &	  1.09 sec \\
+		\texttt{iter-50 						}		 &              1290.16 &	1290.59 &	  0.69 sec \\
+		\texttt{iter-30 						}		 &              1393.38 &	1394.41 &	  0.66 sec \\
+		\texttt{iter-200+elite-30 				}	&              1229.94 &	1230.02 &	  1.11 sec \\
+		\texttt{iter-200+pop\_size-3000+elite-30} 	 &	101.37 &	 103.35 &	  6.42 sec \\
 		\bottomrule
 	\end{tabular}
 	\captionof{table}{Rastrigin CME-AS performance}
-	\label{tab:cmeas-performance-r}
+	\label{tab:cmaes-performance-r}
 \end{figure}
 
-		
+
+In Figure \ref{fig:cmaes-r-fitness/baseline} is plotted the best and the worse fitness for each generation (averaged over 3 runs) for the baseline model. Below, in Figures \ref{fig:cmaes-r-fitness/3000} and \ref{fig:cmaes-r-fitness/3000iter} are plotted the fitness of the models that perform better with the rastrigin function.
+
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[b]{.6\textwidth}
+		\includegraphics[width=\linewidth]{../src/out/cma_es/baseline/rastrigin/fitness.pdf}	
+	\end{minipage}
+	\caption{Rastrigin fitness \texttt{baseline}}
+	\label{fig:cmaes-r-fitness/baseline}
+
+	\begin{minipage}[b]{.6\textwidth}
+		\includegraphics[width=\linewidth]{../src/out/cma_es/pop_size-3000/rastrigin/fitness.pdf}	
+	\end{minipage}
+	\caption{Rastrigin fitness \texttt{pop\_size-3000}}
+	\label{fig:cmaes-r-fitness/3000}
+	
+		\begin{minipage}[b]{.6\textwidth}
+		\includegraphics[width=\linewidth]{../src/out/cma_es/pop_size-3000+iter-200+elite-30/rastrigin/fitness.pdf}	
+	\end{minipage}
+	\caption{Rastrigin fitness \texttt{pop\_size-3000+iter-200+elite-30}}
+	\label{fig:cmaes-r-fitness/3000iter}
+\end{figure}
+
+
+For the sphere function, 40 generations are enough to obtain a solution close enough to the global optimum, as shown for the experiment \texttt{pop\_size-3000}.
+
+For the rastrigin function and the parameter tested, it was not possible to converge to a global optimum. 
