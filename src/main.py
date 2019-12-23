@@ -3,6 +3,7 @@
 # Evolutionary Algorithms
 
 import os
+import time
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -57,7 +58,7 @@ def plot_2d_contour(obj_function):
     # plt.plot(X, Y, 'ko', ms=3)
 
 
-def plot_fitness(out_dir, name, x, y1, y2, title):
+def plot_fitness(out_dir, name, algo_name, x, y1, y2, title):
     """
     (d) For each test function, plot the best and the worse fitness for each generation (averaged over 3 runs).
     :param name:
@@ -79,9 +80,21 @@ def plot_fitness(out_dir, name, x, y1, y2, title):
 
     plt.gca().set_ylim(bottom=-70)
 
+    plt.annotate(round(y1[-1], 2), xy=(x[-1], y1[-1]), xycoords='data',
+                xytext=(-40, 15), size=10, textcoords='offset points',
+                arrowprops=dict(arrowstyle="->",
+                                connectionstyle="angle,angleA=0,angleB=90,rad=10"),
+                )
+
+    plt.annotate(round(y2[-1], 2), xy=(x[-1], y2[-1]), xycoords='data',
+                xytext=(-40, 15), textcoords='offset points',
+                arrowprops=dict(arrowstyle="->",
+                                connectionstyle="angle,angleA=0,angleB=90,rad=10"),
+                )
+
     plt.legend()
 
-    plt.title(title, weight='bold', fontsize=12)
+    plt.title(algo_name + '\n' + title, weight='bold', fontsize=12)
     plt.savefig(out_dir + 'fitness.pdf')
     plt.close()
 
@@ -105,7 +118,7 @@ def plot_generation(out_dir, name, i, iteration, min, obj_fun, sample):
         plt.plot(sample[:, 0], sample[:, 1], 'ko')
         plt.xlim([-5, 5])
         plt.ylim([-5, 5])
-        plt.title(name + '\ngeneration: ' + str(i + 1) + '\nmin: ' + str(min[i]))
+        plt.title(name.upper() + '\ngeneration: ' + str(i + 1) + '\nmin: ' + str(min[i]))
 
         # plt.pause(0.1)
         plt.savefig(out_dir + name + '-generation-contour-' + str(i) + '.pdf')
@@ -113,7 +126,7 @@ def plot_generation(out_dir, name, i, iteration, min, obj_fun, sample):
     plt.close()
 
 
-def cem(obj_fun, dim_domain, population_size, elite_set_ratio, learning_rate, iteration, out_dir, name):
+def cem(obj_fun, dim_domain, population_size, elite_set_ratio, learning_rate, iteration, out_dir, name, plot_generations):
     """
 
     :param dim_domain:
@@ -151,7 +164,8 @@ def cem(obj_fun, dim_domain, population_size, elite_set_ratio, learning_rate, it
         elite = fittest[:p]
 
         # PLOT
-        plot_generation(out_dir, name, i, iteration, min, obj_fun, sample)
+        if plot_generations:
+            plot_generation(out_dir, name, i, iteration, min, obj_fun, sample)
 
         # Refit a new Gaussian distribution from the elite set
         mean = np.mean(elite, axis=0)
@@ -161,7 +175,7 @@ def cem(obj_fun, dim_domain, population_size, elite_set_ratio, learning_rate, it
     return mean, min, max
 
 
-def nes(obj_fun, dim_domain, population_size, elite_set_ratio, learning_rate, iteration, out_dir, name):
+def nes(obj_fun, dim_domain, population_size, elite_set_ratio, learning_rate, iteration, out_dir, name, plot_generations):
     """
 
     :param dim_domain:
@@ -173,7 +187,7 @@ def nes(obj_fun, dim_domain, population_size, elite_set_ratio, learning_rate, it
     # Initialise parameters
     mean = np.random.uniform(-5, 5, dim_domain)
     # variance = np.full(dim_domain, 1)
-    variance = np.random.uniform(1, 1, dim_domain)
+    variance = np.random.uniform(0, 5, dim_domain)
 
     max = np.zeros(iteration)
     min = np.zeros(iteration)
@@ -199,7 +213,8 @@ def nes(obj_fun, dim_domain, population_size, elite_set_ratio, learning_rate, it
         F_sigma = np.matmul(log_derivative_sigma.T, log_derivative_sigma) / sample.shape[0]
 
         # PLOT
-        plot_generation(out_dir, name, i, iteration, min, obj_fun, sample)
+        if plot_generations:
+            plot_generation(out_dir, name, i, iteration, min, obj_fun, sample)
 
         # Update mean and variance
         mean = mean - learning_rate * np.matmul(np.linalg.inv(F_mu), J_gradient_mu)
@@ -209,7 +224,7 @@ def nes(obj_fun, dim_domain, population_size, elite_set_ratio, learning_rate, it
     return mean, min, max
 
 
-def cma_es(obj_fun, dim_domain, population_size, elite_set_ratio, learning_rate, iteration, out_dir, name):
+def cma_es(obj_fun, dim_domain, population_size, elite_set_ratio, learning_rate, iteration, out_dir, name, plot_generations):
     """
 
     :param dim_domain:
@@ -248,7 +263,8 @@ def cma_es(obj_fun, dim_domain, population_size, elite_set_ratio, learning_rate,
         elite = fittest[:p]
 
         # PLOT
-        plot_generation(out_dir, name, i, iteration, min, obj_fun, sample)
+        if plot_generations:
+            plot_generation(out_dir, name, i, iteration, min, obj_fun, sample)
 
         # Refit a new Gaussian distribution from the elite set
 
@@ -266,7 +282,7 @@ def cma_es(obj_fun, dim_domain, population_size, elite_set_ratio, learning_rate,
 
 
 def run(algorithm, experiment, run=3, dim_domain=100, population_size=30, elite_set_ratio=0.20,
-        learning_rate=0.00001, iteration=100):
+        learning_rate=0.01, iteration=100):
     """
 
     :param algorithm:
@@ -279,9 +295,9 @@ def run(algorithm, experiment, run=3, dim_domain=100, population_size=30, elite_
     :param iteration:
     :return:
     """
-
+    print('Running '+ experiment + '…')
     out_dir_sphere = 'out/' + algorithm.__name__ + '/' + str(experiment) + '/sphere/'
-    out_dir_rastrigin = 'out/' + algorithm.__name__ +  '/' + str(experiment) + '/rastrigin/'
+    out_dir_rastrigin = 'out/' + algorithm.__name__ + '/' + str(experiment) + '/rastrigin/'
     check_dir(out_dir_sphere)
     check_dir(out_dir_rastrigin)
 
@@ -291,28 +307,65 @@ def run(algorithm, experiment, run=3, dim_domain=100, population_size=30, elite_
     avg_sphere_max = 0
     avg_rastrigin_max = 0
 
+    avg_sphere_time = 0
+    avg_rastrigin_time = 0
+
     for i in range(run):
-        sphere_mean, sphere_min, sphere_max = algorithm(sphere_test, dim_domain, population_size, elite_set_ratio,
-                                                        learning_rate, iteration, out_dir_sphere, algorithm.__name__)
-        rastrigin_mean, rastrigin_min, rastrigin_max = algorithm(rastrigin_test, dim_domain, population_size,
-                                                                 elite_set_ratio, learning_rate, iteration,
-                                                                 out_dir_rastrigin, algorithm.__name__)
+        if i == 0:
+            plot_generations = True
+        else:
+            plot_generations = False
 
-        avg_sphere_min += sphere_min
-        avg_rastrigin_min += rastrigin_min
+        try:
+            sphere_s_time = time.time()
+            sphere_mean, sphere_min, sphere_max = algorithm(sphere_test, dim_domain, population_size, elite_set_ratio,
+                                                            learning_rate, iteration, out_dir_sphere, algorithm.__name__, plot_generations)
+            sphere_e_time = time.time()
+            avg_sphere_time += sphere_e_time - sphere_s_time
 
-        avg_sphere_max += sphere_max
-        avg_rastrigin_max += rastrigin_max
+            avg_sphere_min += sphere_min
+            avg_sphere_max += sphere_max
+        except ValueError:
+            pass
+
+        try:
+            rastrigin_s_time = time.time()
+            rastrigin_mean, rastrigin_min, rastrigin_max = algorithm(rastrigin_test, dim_domain, population_size,
+                                                                     elite_set_ratio, learning_rate, iteration,
+                                                                     out_dir_rastrigin, algorithm.__name__, plot_generations)
+            rastrigin_e_time = time.time()
+            avg_rastrigin_time += rastrigin_e_time - rastrigin_s_time
+
+            avg_rastrigin_min += rastrigin_min
+            avg_rastrigin_max += rastrigin_max
+        except ValueError:
+            pass
 
     avg_sphere_min /= run
     avg_rastrigin_min /= run
     avg_sphere_max /= run
     avg_rastrigin_max /= run
 
+    avg_sphere_time /= run
+    avg_rastrigin_time /= run
+
     iterator = np.arange(iteration)
 
-    plot_fitness(out_dir_sphere, 'Sphere', iterator, avg_sphere_max, avg_sphere_min, 'Sphere Fitness')
-    plot_fitness(out_dir_rastrigin, 'Rastrigin', iterator, avg_rastrigin_max, avg_rastrigin_min, 'Rastrigin Fitness')
+    with open(out_dir_sphere + 'data.txt', 'w') as f:
+        f.write('min,max,time\n')
+        if isinstance(avg_sphere_min, np.ndarray):
+            f.write(str(avg_sphere_min[-1]) + ',' + str(avg_sphere_max[-1]) + ',' + str(avg_sphere_time))
+
+            plot_fitness(out_dir_sphere, 'Sphere', algorithm.__name__.upper(), iterator, avg_sphere_max, avg_sphere_min,
+                         'Sphere Fitness')
+
+    with open(out_dir_rastrigin + 'data.txt', 'w') as f:
+        f.write('min,max,time\n')
+        if isinstance(avg_rastrigin_min, np.ndarray):
+            f.write(str(avg_rastrigin_min[-1]) + ',' + str(avg_rastrigin_max[-1]) + ',' + str(avg_rastrigin_time))
+
+            plot_fitness(out_dir_rastrigin, 'Rastrigin', algorithm.__name__.upper(), iterator, avg_rastrigin_max,
+                         avg_rastrigin_min, 'Rastrigin Fitness')
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -338,29 +391,29 @@ def run(algorithm, experiment, run=3, dim_domain=100, population_size=30, elite_
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 2 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-# # (a) Run CEM 3 times for both of test functions with 100-dimensional dim_domain.
-# run(cem, experiment='baseline')
+# (a) Run CEM 3 times for both of test functions with 100-dimensional dim_domain.
+run(cem, experiment='baseline')
 
-# # (b) Try different population size and elite set ratio and see what best performance you can obtain.
-# run(cem, experiment='pop_size-100', population_size=100)
-# run(cem, experiment='pop_size-1000', population_size=1000)
-#
-# run(cem, experiment='elite-30', elite_set_ratio=0.30)
-# run(cem, experiment='elite-10', elite_set_ratio=0.10)
-#
-# run(cem, experiment='pop_size-100+elite-30', population_size=100, elite_set_ratio=0.30)
-# run(cem, experiment='pop_size-100+elite-10', population_size=100, elite_set_ratio=0.10)
-#
-# run(cem, experiment='pop_size-1000+elite-30', population_size=1000, elite_set_ratio=0.30)
-# run(cem, experiment='pop_size-1000+elite-10', population_size=1000, elite_set_ratio=0.10)
+# (b) Try different population size and elite set ratio and see what best performance you can obtain.
+run(cem, experiment='pop_size-100', population_size=100)
+run(cem, experiment='pop_size-1000', population_size=1000)
 
-# # (c) Try different number of generations.
-# run(cem, experiment='iteration-50', iteration=50)
-# run(cem, experiment='iteration-30', iteration=30)
-#
-# run(cem, experiment='iteration-30+elite-10', elite_set_ratio=0.10, iteration=30)
-# run(cem, experiment='iteration-50+elite-10', elite_set_ratio=0.10, iteration=50)
-# run(cem, experiment='iteration-200+pop_size-1000+elite-30', population_size=1000, elite_set_ratio=0.30, iteration=200)
+run(cem, experiment='elite-30', elite_set_ratio=0.30)
+run(cem, experiment='elite-10', elite_set_ratio=0.10)
+
+run(cem, experiment='pop_size-100+elite-30', population_size=100, elite_set_ratio=0.30)
+run(cem, experiment='pop_size-100+elite-10', population_size=100, elite_set_ratio=0.10)
+
+run(cem, experiment='pop_size-1000+elite-30', population_size=1000, elite_set_ratio=0.30)
+run(cem, experiment='pop_size-1000+elite-10', population_size=1000, elite_set_ratio=0.10)
+
+# (c) Try different number of generations.
+run(cem, experiment='iteration-50', iteration=50)
+run(cem, experiment='iteration-30', iteration=30)
+
+run(cem, experiment='iteration-30+elite-10', elite_set_ratio=0.10, iteration=30)
+run(cem, experiment='iteration-50+elite-10', elite_set_ratio=0.10, iteration=50)
+run(cem, experiment='iteration-200+pop_size-1000+elite-30', population_size=1000, elite_set_ratio=0.30, iteration=200)
 
 # TODO What is the minimum number of generations that you can obtain a solution close enough to the global optimum?
 
@@ -374,49 +427,64 @@ run(nes, experiment='baseline')
 # # (b) Try different population size and learning rate and see what best performance you can obtain.
 run(nes, experiment='pop_size-100', population_size=100)
 run(nes, experiment='pop_size-1000', population_size=1000)
+run(nes, experiment='pop_size-5000', population_size=5000)
 
-run(nes, experiment='lr-01', learning_rate=0.01)
+run(nes, experiment='lr-001', learning_rate=0.001)
 run(nes, experiment='lr-0001', elite_set_ratio=0.0001)
 run(nes, experiment='lr-00001', elite_set_ratio=0.00001)
 
-run(nes, experiment='pop_size-100+lr-01', population_size=100, learning_rate=0.01)
-run(nes, experiment='pop_size-100+lr-0001', population_size=100, learning_rate=0.0001)
-run(nes, experiment='pop_size-100+lr-00001', population_size=100, learning_rate=0.00001)
-
-run(nes, experiment='pop_size-1000+lr-01', population_size=1000, learning_rate=0.01)
+run(nes, experiment='pop_size-1000+lr-001', population_size=1000, learning_rate=0.001)
 run(nes, experiment='pop_size-1000+lr-0001', population_size=1000, learning_rate=0.0001)
-run(nes, experiment='pop_size-1000+lr-00001', population_size=1000, learning_rate=0.00001)
+run(nes, experiment='pop_size-5000+lr-001', population_size=5000, learning_rate=0.001)
+run(nes, experiment='pop_size-5000+lr-0001', population_size=5000, learning_rate=0.0001)
 
 # # (c) Try different number of generations.
 run(nes, experiment='iteration-2000', iteration=2000)
 run(nes, experiment='iteration-5000', iteration=5000)
-  
-run(nes, experiment='iteration-2000+pop_size-1000+lr-01', population_size=1000, learning_rate=0.01, iteration=2000)
-run(nes, experiment='iteration-5000+pop_size-1000+lr-01', population_size=1000, learning_rate=0.01, iteration=5000)
 
-run(nes, experiment='iteration-2000+pop_size-1000+lr-0001', population_size=1000, learning_rate=0.0001,
-    iteration=2000)
-run(nes, experiment='iteration-5000+pop_size-1000+lr-0001', population_size=1000, learning_rate=0.0001,
-    iteration=5000)
+run(nes, experiment='iteration-2000+pop_size-1000', population_size=1000, iteration=2000)
+run(nes, experiment='iteration-5000+pop_size-1000', population_size=1000, iteration=5000)
 
-run(nes, experiment='iteration-2000+pop_size-1000+lr-00001', population_size=1000, learning_rate=0.00001,
-    iteration=2000)
-run(nes, experiment='iteration-5000+pop_size-1000+lr-00001', population_size=1000, learning_rate=0.00001,
-    iteration=5000)
+run(nes, experiment='iteration-2000+pop_size-5000', population_size=5000, iteration=2000)
+run(nes, experiment='iteration-5000+pop_size-5000', population_size=5000, iteration=5000)
 
-# run(nes, experiment=2, dim_domain=50, population_size=1000, learning_rate=0.01, iteration=5000)
+run(nes, experiment='iteration-2000+pop_size-1000+lr-001', population_size=1000, learning_rate=0.001, iteration=2000)
+run(nes, experiment='iteration-2000+pop_size-1000+lr-0001', population_size=1000, learning_rate=0.0001, iteration=2000)
+run(nes, experiment='iteration-2000+pop_size-5000+lr-001', population_size=5000, learning_rate=0.001, iteration=2000)
+run(nes, experiment='iteration-2000+pop_size-5000+lr-0001', population_size=5000, learning_rate=0.0001, iteration=2000)
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 4 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # (a) Run CMA-ES 3 times for both of test functions with 100-dimensional domain. (i.e. n = 100) Note that you can uniformly sample the initial population parameters as long as they are reasonably far from the global optimum.
-# (b) Try different population size and learning rate and see what best performance you can obtain.
-# (c) Try different number of generations. What is the minimum number of gener- ations that you can obtain a solution close enough to the global optimum?
-# (d) For each test function, plot the best and the worse fitness for each generation (averaged over 3 runs). Let x-axis be the generations and y-axis be the fitness values. Note that this should be one single figure with two curves (one for best fitness and another for worst fitness).
+run(cma_es, experiment='baseline')
 
-# run(cma_es, experiment=3)
-# cma_es(sphere_test, 2, 1000, 0.20, 100)
+# (b) Try different population size and learning rate and see what best performance you can obtain.
+run(cma_es, experiment='pop_size-100', population_size=100)
+run(cma_es, experiment='pop_size-1000', population_size=1000)
+
+run(cma_es, experiment='elite-30', elite_set_ratio=0.30)
+run(cma_es, experiment='elite-10', elite_set_ratio=0.10)
+
+run(cma_es, experiment='pop_size-100+elite-30', population_size=100, elite_set_ratio=0.30)
+run(cma_es, experiment='pop_size-100+elite-10', population_size=100, elite_set_ratio=0.10)
+
+run(cma_es, experiment='pop_size-1000+elite-30', population_size=1000, elite_set_ratio=0.30)
+run(cma_es, experiment='pop_size-1000+elite-10', population_size=1000, elite_set_ratio=0.10)
+
+# (c) Try different number of generations. What is the minimum number of gener- ations that you can obtain a solution close enough to the global optimum?
+run(cma_es, experiment='iteration-50', iteration=50)
+run(cma_es, experiment='iteration-30', iteration=30)
+
+run(cma_es, experiment='iteration-30+elite-10', elite_set_ratio=0.10, iteration=30)
+run(cma_es, experiment='iteration-50+elite-10', elite_set_ratio=0.10, iteration=50)
+run(cma_es, experiment='iteration-200+pop_size-1000+elite-30', population_size=1000, elite_set_ratio=0.30, iteration=200)
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 5 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# (a) Plot the comparison of CEM, NES and CMA-ES for the best fitness in each generation. Note that this should be one single figure with three curves, each for one algorithm.
-# (b) Plot the comparison of CEM, NES and CMA-ES for the worst fitness in each generation. Note that this should be one single figure with three curves, each for one algorithm.
+# (a) Plot the comparison of CEM, NES and CMA-ES for the best fitness in each generation.
+# Note that this should be one single figure with three curves, each for one algorithm.
+
+# (b) Plot the comparison of CEM, NES and CMA-ES for the worst fitness in each generation.
+# Note that this should be one single figure with three curves, each for one algorithm.
+
 # (c) For each test function, which algorithm is best? which is the worst?
