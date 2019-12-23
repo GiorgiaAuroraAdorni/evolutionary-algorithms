@@ -32,14 +32,14 @@
 
 The first algorithm implemented is the \textbf{Cross-Entropy Method (CEM)}. 
 
-Different execution of the algorithm has been performed. The first experiment is called baseline, and it uses the same parameters as for the following algorithms. After that, were made some attempts of improving the performances trying different population size and elite set ratio, and also with different number of generations. In all the experiments the domain size is fixed to 100 dimension.
+Different execution of the algorithm has been performed. The first experiment is called baseline, and it uses the same parameters as for the following algorithms. After that, were made some attempts of improving the performances trying different population size and elite set ratio, and also with different number of generations. In all the experiments the domain size is fixed to 100 dimensions.
 
-For all the experiments, the initial population parameters are initialised reasonably far from the global optimum, in particular, the mean is uniformly sample in the range [-5, 5] and the variance is uniformly sample in the range [4, 5].
+For all the experiments, the initial population parameters are initialised reasonably far from the global optimum, in particular, the mean is uniformly sampled in the range [-5, 5] and the variance is uniformly sampled in the range [4, 5].
 
-In Table \ref{tab:cem-param} are shown the different combinations of parameter used.
+In Table \ref{tab:cem-param} are shown the different combinations of parameters used.
 \bigskip
 
-The algorithm has been run 3 times for both of test functions. 
+The algorithm has been run 3 times for both test functions. 
 In order to evaluate the performance, for each pair of experiment and test function, the best and the worse fitness for each generation (averaged over 3 runs) has been plotted. 
  
 In Tables \ref{tab:cem-performance-s} and \ref{tab:cem-performance-r} are summarised the results. 
@@ -75,7 +75,7 @@ In Tables \ref{tab:cem-performance-s} and \ref{tab:cem-performance-r} are summar
 	\label{tab:cem-performance-s}
 \end{figure}
 
-In Figure \ref{fig:cem-s-fitness/baseline} is plotted the best and the worse fitness for each generation (averaged over 3 runs) for the baseline model. Below, in Figure \ref{fig:cem-s-fitness/1000} and \ref{fig:cem-s-fitness/200}, are plotted the fitness of the two models that perform better with the sphere function.
+In Figure \ref{fig:cem-s-fitness/baseline} is plotted the best and the worse fitness for each generation (averaged over 3 runs) for the baseline model. Below, in Figures \ref{fig:cem-s-fitness/1000} and \ref{fig:cem-s-fitness/200}, are plotted the fitness of the two models that perform better with the sphere function.
 
 For the sphere function, it is possible to see that simply using a large enough population size the algorithm converges. 
 Moreover, increasing the elite set ratio the algorithm converges quickly.
@@ -183,7 +183,7 @@ For the rastrigin function, it is necessary not only to increase the size of the
 \end{figure}
 \bigskip
 
-In Figure \ref{fig:cem-r-fitness/baseline} is plotted the best and the worse fitness for each generation (averaged over 3 runs) for the baseline model. Below, in Figure \ref{fig:cem-r-fitness/1000} and \ref{fig:cem-r-fitness/200}, are plotted the fitness of the two models that perform better with the rastrigin function.
+In Figure \ref{fig:cem-r-fitness/baseline} is plotted the best and the worse fitness for each generation (averaged over 3 runs) for the baseline model. Below, in Figures \ref{fig:cem-r-fitness/1000} and \ref{fig:cem-r-fitness/200}, are plotted the fitness of the two models that perform better with the rastrigin function.
 
 \begin{figure}[H]
 	\centering

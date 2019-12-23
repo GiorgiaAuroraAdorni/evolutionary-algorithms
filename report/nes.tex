@@ -36,14 +36,14 @@ As for the previous method, different execution of the algorithm has been perfor
 \end{figure}
 
 
-The first experiment is called baseline, and it uses the same parameters as for the following algorithms. After that, were made some attempts of improving the performances trying different population size and elite set ratio, and also with different number of generations. In all the experiments the domain size is fixed to 100 dimension.
+The first experiment is called baseline, and it uses the same parameters as for the following algorithms. After that, were made some attempts of improving the performances trying different population size and elite set ratio, and also with different number of generations. In all the experiments the domain size is fixed to 100 dimensions.
 
-For all the experiments, the initial population parameters are initialised reasonably far from the global optimum, in particular, the mean is uniformly sample in the range [-5, 5] and the covariance matrix is initialised as a diagonal matrix with points uniformly sampled in the range [4, 5].
+For all the experiments, the initial population parameters are initialised reasonably far from the global optimum, in particular, the mean is uniformly sampled in the range [-5, 5] and the covariance matrix is initialised as a diagonal matrix with points uniformly sampled in the range [4, 5].
 
-In Table \ref{tab:nes-param} are shown the different combinations of parameter used for this algorithm.
+In Table \ref{tab:nes-param} are shown the different combinations of parameters used for this algorithm.
 \bigskip
 
-The algorithm has been run 3 times for both of test functions. 
+The algorithm has been run 3 times for both test functions. 
 In order to evaluate the performance, for each pair of experiment and test function, the best and the worse fitness for each generation (averaged over 3 runs) has been plotted. 
 \bigskip
 
@@ -83,7 +83,7 @@ Therefore, by increasing the population size enough and the number of generation
 With the presented parameters, using too low a learning rate reduces the algorithm's convergence speed.
 \bigskip
 
-In Figure \ref{fig:new-s-fitness/2000}, \ref{fig:new-s-fitness/5000} and \ref{fig:new-s-fitness/lr} are plotted the best and the worse fitness for each generation (averaged over 3 runs) for the models that perform better with the sphere function.
+In Figures \ref{fig:new-s-fitness/2000}, \ref{fig:new-s-fitness/5000} and \ref{fig:new-s-fitness/lr} are plotted the best and the worse fitness for each generation (averaged over 3 runs) for the models that perform better with the sphere function.
 
  \begin{figure}[H]
 	\centering
@@ -139,7 +139,7 @@ With the tested parameters, it was not possible to converge the algorithm to a g
 	\label{tab:nes-performance-r}
 \end{figure}
 
-In Figure \ref{fig:nes-r-fitness/001} and \ref{fig:nes-r-fitness/0001} are plotted the best and the worse fitness for each generation (averaged over 3 runs) of two models performed.
+In Figures \ref{fig:nes-r-fitness/001} and \ref{fig:nes-r-fitness/0001} are plotted the best and the worse fitness for each generation (averaged over 3 runs) of two models performed.
 
 For the sphere function, 2000 generations are enough to obtain a solution close enough to the global optimum, as shown for the experiment \texttt{iteration-2000+pop\_size-5000}.
 
