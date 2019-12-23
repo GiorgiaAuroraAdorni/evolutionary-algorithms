@@ -1,0 +1,118 @@
+\section{Natural Evolution Strategy (NES)}
+
+\begin{figure}[htb]
+	\centering
+	
+	\begin{tabular}{lcccc}
+		\toprule
+		\textbf{experiment} & \textbf{domain} & \textbf{popul.} & \textbf{learning rate} &
+		\textbf{generations} \\
+		\midrule
+		\texttt{baseline 						}	& 100 & 30 		& 1e-2 	& 100\\
+		\texttt{pop\_size-100 					}	& 100 & 100 	& 1e-2 	& 100\\
+		\texttt{pop\_size-1000 					}	& 100 & 1000 	& 1e-2 	& 100\\
+		\texttt{pop\_size-5000 					}	& 100 & 5000 	& 1e-2 	& 100\\
+		\texttt{lr-001 							}	& 100 & 30 		& 1e-3 	& 100\\
+		\texttt{lr-0001	 						}	& 100 & 30 		& 1e-4 	& 100\\
+		\texttt{lr-00001	 					}	& 100 & 30 		& 1e-5 	& 100\\
+		\texttt{pop\_size-1000+lr-001 			}	& 100 & 1000 	& 1e-3 	& 100\\
+		\texttt{pop\_size-1000+lr-0001 			}	& 100 & 1000 	& 1e-4 	& 100\\
+		\texttt{pop\_size-5000+lr-001 			}	& 100 & 5000 	& 1e-3 	& 100\\
+		\texttt{pop\_size-5000+lr-0001 			}	& 100 & 5000 	& 1e-4 	& 100\\
+		\texttt{iter-2000 						}	& 100 & 30 		& 1e-2 	& 2000\\
+		\texttt{iter-5000 						}	& 100 & 30 		& 1e-2 	& 5000\\
+		\texttt{iter-2000+pop-1000 	}	& 100 & 1000 	& 1e-2 	& 2000\\
+		\texttt{iter-5000+pop-1000 	}	& 100 & 1000 	& 1e-2 	& 5000\\
+		\texttt{iter-2000+pop-5000 	}	& 100 & 5000 	& 1e-2 	& 2000\\
+		\texttt{iter-5000+pop-5000 	}	& 100 & 5000 	& 1e-2 	& 5000\\
+		\texttt{iter-2000+pop-1000+lr-001 }	& 100 & 1000 	& 1e-3 	& 2000\\
+		\texttt{iter-2000+pop-1000+lr-0001 }	& 100 & 1000 	& 1e-4 	& 2000\\
+		\texttt{iter-2000+pop-5000+lr-001 }	& 100 & 1000 	& 1e-3 	& 5000\\
+		\texttt{iter-2000+pop-5000+lr-0001 }	& 100 & 1000 	& 1e-4 	& 5000\\
+	
+		\bottomrule
+	\end{tabular}
+	\captionof{table}{NES parameters}
+	\label{tab:nes-param}
+\end{figure}
+
+
+Try different population size and learning rate and see what best performance you can obtain
+
+
+Try different number of generations. What is the minimum number of gener- ations that you can obtain a solution close enough to the global optimum?
+
+
+For each test function, plot the best and the worse fitness for each generation (averaged over 3 runs).
+
+
+\begin{figure}[htb]
+	\centering
+	
+	\begin{tabular}{lcccc}
+		\toprule
+		\textbf{experiment} & \textbf{domain} & \textbf{popul.} & \textbf{learning rate} &
+		\textbf{generations} \\
+		\midrule
+		\texttt{baseline 						}	& 100 & 30 		& 1e-2 	& 100\\
+		\texttt{pop\_size-100 					}	& 100 & 100 	& 1e-2 	& 100\\
+		\texttt{pop\_size-1000 					}	& 100 & 1000 	& 1e-2 	& 100\\
+		\texttt{pop\_size-5000 					}	& 100 & 5000 	& 1e-2 	& 100\\
+		\texttt{lr-001 							}	& 100 & 30 		& 1e-3 	& 100\\
+		\texttt{lr-0001	 						}	& 100 & 30 		& 1e-4 	& 100\\
+		\texttt{lr-00001	 					}	& 100 & 30 		& 1e-5 	& 100\\
+		\texttt{pop\_size-1000+lr-001 			}	& 100 & 1000 	& 1e-3 	& 100\\
+		\texttt{pop\_size-1000+lr-0001 			}	& 100 & 1000 	& 1e-4 	& 100\\
+		\texttt{pop\_size-5000+lr-001 			}	& 100 & 5000 	& 1e-3 	& 100\\
+		\texttt{pop\_size-5000+lr-0001 			}	& 100 & 5000 	& 1e-4 	& 100\\
+		\texttt{iter-2000 						}	& 100 & 30 		& 1e-2 	& 2000\\
+		\texttt{iter-5000 						}	& 100 & 30 		& 1e-2 	& 5000\\
+		\texttt{iter-2000+pop-1000 	}	& 100 & 1000 	& 1e-2 	& 2000\\
+		\texttt{iter-5000+pop-1000 	}	& 100 & 1000 	& 1e-2 	& 5000\\
+		\texttt{iter-2000+pop-5000 	}	& 100 & 5000 	& 1e-2 	& 2000\\
+		\texttt{iter-5000+pop-5000 	}	& 100 & 5000 	& 1e-2 	& 5000\\
+		\texttt{iter-2000+pop-1000+lr-001 }	& 100 & 1000 	& 1e-3 	& 2000\\
+		\texttt{iter-2000+pop-1000+lr-0001 }	& 100 & 1000 	& 1e-4 	& 2000\\
+		\texttt{iter-2000+pop-5000+lr-001 }	& 100 & 1000 	& 1e-3 	& 5000\\
+		\texttt{iter-2000+pop-5000+lr-0001 }	& 100 & 1000 	& 1e-4 	& 5000\\
+		\bottomrule
+	\end{tabular}
+	\captionof{table}{Sphere NES performance}
+	\label{tab:nes-performance-s}
+\end{figure}
+
+
+\begin{figure}[htb]
+	\centering
+	
+	\begin{tabular}{lcccc}
+		\toprule
+		\textbf{experiment} & \textbf{domain} & \textbf{popul.} & \textbf{learning rate} &
+		\textbf{generations} \\
+		\midrule
+		\texttt{baseline 						}	& 100 & 30 		& 1e-2 	& 100\\
+		\texttt{pop\_size-100 					}	& 100 & 100 	& 1e-2 	& 100\\
+		\texttt{pop\_size-1000 					}	& 100 & 1000 	& 1e-2 	& 100\\
+		\texttt{pop\_size-5000 					}	& 100 & 5000 	& 1e-2 	& 100\\
+		\texttt{lr-001 							}	& 100 & 30 		& 1e-3 	& 100\\
+		\texttt{lr-0001	 						}	& 100 & 30 		& 1e-4 	& 100\\
+		\texttt{lr-00001	 					}	& 100 & 30 		& 1e-5 	& 100\\
+		\texttt{pop\_size-1000+lr-001 			}	& 100 & 1000 	& 1e-3 	& 100\\
+		\texttt{pop\_size-1000+lr-0001 			}	& 100 & 1000 	& 1e-4 	& 100\\
+		\texttt{pop\_size-5000+lr-001 			}	& 100 & 5000 	& 1e-3 	& 100\\
+		\texttt{pop\_size-5000+lr-0001 			}	& 100 & 5000 	& 1e-4 	& 100\\
+		\texttt{iter-2000 						}	& 100 & 30 		& 1e-2 	& 2000\\
+		\texttt{iter-5000 						}	& 100 & 30 		& 1e-2 	& 5000\\
+		\texttt{iter-2000+pop-1000 	}	& 100 & 1000 	& 1e-2 	& 2000\\
+		\texttt{iter-5000+pop-1000 	}	& 100 & 1000 	& 1e-2 	& 5000\\
+		\texttt{iter-2000+pop-5000 	}	& 100 & 5000 	& 1e-2 	& 2000\\
+		\texttt{iter-5000+pop-5000 	}	& 100 & 5000 	& 1e-2 	& 5000\\
+		\texttt{iter-2000+pop-1000+lr-001 }	& 100 & 1000 	& 1e-3 	& 2000\\
+		\texttt{iter-2000+pop-1000+lr-0001 }	& 100 & 1000 	& 1e-4 	& 2000\\
+		\texttt{iter-2000+pop-5000+lr-001 }	& 100 & 1000 	& 1e-3 	& 5000\\
+		\texttt{iter-2000+pop-5000+lr-0001 }	& 100 & 1000 	& 1e-4 	& 5000\\
+		\bottomrule
+	\end{tabular}
+	\captionof{table}{Rastrigin NES performance}
+	\label{tab:nes-performance-r}
+\end{figure}

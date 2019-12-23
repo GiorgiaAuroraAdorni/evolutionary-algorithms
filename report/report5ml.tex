@@ -100,7 +100,7 @@
 \cfoot{\footnotesize \thepage} 
 
 \begin{document}
-	\thispagestyle{empty}  
+%	\thispagestyle{empty}  
 	\noindent{
 	\begin{tabular}{p{15cm}} 
 		{\large \bf Machine Learning} \\
@@ -123,7 +123,79 @@
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	
 
+\section{Introduction}
+In this assignment, we are going to implement a few evolutionary algorithms against test functions and analyze the characteristics of different algorithms.
+Let $f : \mathbb{R}^n \rightarrow \mathbb{R}$ be a test function with n-dimensional domain.
+
+
+\begin{itemize}
+	\item[•] Spere function:
+	\begin{equation}
+		f(\overline{x}) = \sum_{i=1}^nx_i^2 \mbox{.}
+	\end{equation}
+	\item[•] Rastrigin function:
+	\begin{equation}
+	f(\overline{x}) = An + \sum_{i=1}^n [x_i^2-A \cos(2\pi x_i)]
+	\end{equation}
+	where $A = 10$.
+\end{itemize}
+The search domain is constraint as $x_i \in [-5, 5]$.
+
+\section{Test Functions}
+
+In Figure \ref{fig:s} and \ref{fig:r} are shown the 2D contour-plot of 2-dimensional test functions.
+\begin{figure}[htb]
+	\begin{minipage}[b]{.49\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/sphere_test.pdf}	
+		\caption{2D contour plot of 2D Sphere}
+		\label{fig:s}
+	\end{minipage}
+	~
+	\begin{minipage}[b]{.49\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/rastrigin_test.pdf}	
+		\caption{2D contour plot of 2D Rastrigin}
+		\label{fig:r}
+	\end{minipage}
+\end{figure}
+
+For each test function, 100 points has been uniformly sampled in the domain and evaluated with the test function. This points are shown in Figure \ref{fig:s-eval} and \ref{fig:r-eval}.
+
+\begin{figure}[htb]
+	\begin{minipage}[b]{.49\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/sphere_test-eval.pdf}	
+		\caption{Sphere test function evaluation}
+		\label{fig:s-eval}
+	\end{minipage}
+	~
+	\begin{minipage}[b]{.49\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/rastrigin_test-eval.pdf}	
+		\caption{Rastrigin test function evaluation}
+		\label{fig:r-eval}
+	\end{minipage}
+\end{figure}
+ 
+Filling the contours and showing the colour-map it is easier to see which are the regions of the global optimum. All the points with value close to 0, the ones in purple, belong to the global optimal region.
+
+In the case of the sphere, the points are concentrated in the central region of the figure. 
+
+For the rastrigin function evaluate the samples is many more complicated, since the function has many local minima. However, the global optimum is located in the centre of plot. For this reason, it will be seen later that finding the global optimum of this function will be difficult.
+ 
+\input{cem}
+\input{nes}
+\input{cmaes}
+
+	
+			
+\section{Benchmarking}
+Plot the comparison of CEM, NES and CMA-ES for the best fitness in each generation
+
+Plot the comparison of CEM, NES and CMA-ES for the worst fitness in each generation
+
+For each test function, which algorithm is best? which is the worst?
 
 \end{document}

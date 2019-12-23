@@ -1,0 +1,91 @@
+\section{Covariance Matrix Adaptation Evolution Strategy \\(CMA-ES)}
+
+\begin{figure}[htb]
+	\centering
+	
+	\begin{tabular}{lcccc}
+		\toprule
+		\textbf{experiment} & \textbf{domain} & \textbf{population} & \textbf{elite} &
+		\textbf{generations} \\
+		\midrule
+		\texttt{baseline 							}	& 100 & 30 	& 0.20 	& 100\\
+		\texttt{pop\_size-100 						}	& 100 & 100 	& 0.20 	& 100\\
+		\texttt{pop\_size-1000 						}	& 100 & 1000 	& 0.20 	& 100\\
+		\texttt{elite-30 							}	& 100 & 30 	& 0.30 	& 100\\
+		\texttt{elite-10 							}	& 100 & 30 	& 0.10 	& 100\\
+		\texttt{pop\_size-100+elite-30 				}	& 100 & 100 	& 0.30 	& 100\\
+		\texttt{pop\_size-100+elite-10 				}	& 100 & 100 	& 0.10 	& 100\\
+		\texttt{pop\_size-1000+elite-30 				}	& 100 & 1000 	& 0.30 	& 100\\
+		\texttt{pop\_size-1000+elite-10 				}	& 100 & 1000 	& 0.10 	& 100\\
+		\texttt{iter-50 						}	& 100 & 30 	& 0.20 	& 50\\
+		\texttt{iter-30 						}	& 100 & 30 	& 0.20 	& 30\\
+		\texttt{iter-30+elite-10 				}	& 100 & 30 	& 0.10 	& 30\\
+		\texttt{iter-50+elite-10 				}	& 100 & 30 	& 0.10 	& 50\\
+		\texttt{iter-200+pop\_size-1000+elite-30} 	& 100 & 1000 	& 0.30 	& 200\\	
+		\bottomrule
+	\end{tabular}
+	\captionof{table}{CMA-ES parameters}
+	\label{tab:cmaes-param}
+\end{figure}
+
+
+Try different population size and learning rate and see what best performance you can obtain.
+
+Try different number of generations. What is the minimum number of gener- ations that you can obtain a solution close enough to the global optimum
+
+For each test function, plot the best and the worse fitness for each generation
+
+\begin{figure}[htb]
+	\centering
+	
+	\begin{tabular}{lccc}
+		\toprule
+		\textbf{experiment} & \textbf{best fitness} & \textbf{worse fitness} & \textbf{avg run time} \\
+		\midrule
+		\texttt{baseline 						}	&  677.09 &                677.09 &                 0.57 sec \\
+		\texttt{pop\_size-100 					}	&   618.11 &                618.11 &                 0.65 sec \\
+		\texttt{pop\_size-1000 					}	&    78.54 &                 78.56 &                 1.21 sec \\
+		\texttt{elite-30 						}	&  690.86 &                690.86 &                 0.57 sec \\
+		\texttt{elite-10 						}	&  712.47 &                712.47 &                 0.61 sec \\
+		\texttt{pop\_size-100+elite-30 			}	&   611.05 &                611.06 &                 0.62 sec \\
+		\texttt{pop\_size-100+elite-10 			}	&   672.11 &                672.11 &                 0.62 sec \\
+		\texttt{pop\_size-1000+elite-30 		}	&    65.15 &                 65.25 &                 1.17 sec \\
+		\texttt{pop\_size-1000+elite-10 		}	&   150.28 &                150.28 &                 1.08 sec \\
+		\texttt{iter-50 						}	&  764.01 &                764.01 &                 0.43 sec \\
+		\texttt{iter-30 						}	&   768.3 &                 768.3 &                 0.39 sec \\
+		\texttt{iter-30+elite-10 				}	&  882.68 &                882.68 &                 0.39 sec \\
+		\texttt{iter-50+elite-10 				}	&  729.77 &                729.77 &                 0.42 sec \\
+		\texttt{iter-200+pop\_size-1000+elite-30} 	&    88.76 &                 88.77 &                 1.78 sec \\\bottomrule
+	\end{tabular}
+	\captionof{table}{Sphere CME-AS performance}
+	\label{tab:cmeas-performance-s}
+\end{figure}
+
+\begin{figure}[htb]
+	\centering
+	
+	\begin{tabular}{lccc}
+		\toprule
+		\textbf{experiment} & \textbf{best fitness} & \textbf{worse fitness} & \textbf{avg run time} \\
+		\midrule
+			\texttt{baseline 						}	&    1493.64 &               1493.64 &                 0.75 sec \\
+		\texttt{pop\_size-100 					}	&      1404.3 &                1404.3 &                 0.84 sec \\
+		\texttt{pop\_size-1000 					}	&      528.97 &                530.01 &                 1.59 sec \\
+		\texttt{elite-30 						}	&    1534.59 &               1534.59 &                 0.76 sec \\
+		\texttt{elite-10 						}	&    1641.93 &               1641.93 &                 0.93 sec \\
+		\texttt{pop\_size-100+elite-30 			}	&     1353.75 &               1353.77 &                 0.85 sec \\
+		\texttt{pop\_size-100+elite-10 			}	&     1464.23 &               1464.23 &                  0.8 sec \\
+		\texttt{pop\_size-1000+elite-30 		}	&      518.71 &                520.95 &                 1.57 sec \\
+		\texttt{pop\_size-1000+elite-10 		}	&      719.32 &                719.49 &                 1.46 sec \\
+		\texttt{iter-50 						}	&    1584.02 &               1584.07 &                 0.63 sec \\
+		\texttt{iter-30 						}	&    1569.96 &               1570.12 &                 0.59 sec \\
+		\texttt{iter-30+elite-10 				}	&    1641.79 &               1641.79 &                 0.59 sec \\
+		\texttt{iter-50+elite-10 				}	&    1627.19 &               1627.19 &                 0.63 sec \\
+		\texttt{iter-200+pop\_size-1000+elite-30} 	&      477.72 &                 477.8 &                 2.31 sec \\
+		\bottomrule
+	\end{tabular}
+	\captionof{table}{Rastrigin CME-AS performance}
+	\label{tab:cmeas-performance-r}
+\end{figure}
+
+		
