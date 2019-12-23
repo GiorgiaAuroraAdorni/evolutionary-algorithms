@@ -145,6 +145,7 @@ The search domain is constraint as $x_i \in [-5, 5]$.
 \section{Test Functions}
 
 In Figure \ref{fig:s} and \ref{fig:r} are shown the 2D contour-plot of 2-dimensional test functions.
+
 \begin{figure}[htb]
 	\begin{minipage}[b]{.49\textwidth}
 		\centering
@@ -160,8 +161,9 @@ In Figure \ref{fig:s} and \ref{fig:r} are shown the 2D contour-plot of 2-dimensi
 		\label{fig:r}
 	\end{minipage}
 \end{figure}
+For each test function, 100 points has been uniformly sampled in the domain and evaluated with the test function. This points are shown in Figure \ref{fig:s-eval} and \ref{fig:r-eval}. 
 
-For each test function, 100 points has been uniformly sampled in the domain and evaluated with the test function. This points are shown in Figure \ref{fig:s-eval} and \ref{fig:r-eval}.
+Filling the contours and showing the colour-map it is easier to see which are the regions of the global optimum. All the points with value close to 0, the ones in purple, belong to the global optimal region.
 
 \begin{figure}[htb]
 	\begin{minipage}[b]{.49\textwidth}
@@ -178,10 +180,8 @@ For each test function, 100 points has been uniformly sampled in the domain and 
 		\label{fig:r-eval}
 	\end{minipage}
 \end{figure}
- 
-Filling the contours and showing the colour-map it is easier to see which are the regions of the global optimum. All the points with value close to 0, the ones in purple, belong to the global optimal region.
 
-In the case of the sphere, the points are concentrated in the central region of the figure. 
+For the sphere, the points are concentrated in the central region of the figure. 
 
 For the rastrigin function evaluate the samples is many more complicated, since the function has many local minima. However, the global optimum is located in the centre of plot. For this reason, it will be seen later that finding the global optimum of this function will be difficult.
  
