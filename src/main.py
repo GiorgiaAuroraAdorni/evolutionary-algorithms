@@ -376,6 +376,58 @@ def run(algorithm, experiment, run=3, dim_domain=100, population_size=100, elite
 
     experiments.append('texttt{' + experiment + '}')
 
+
+def run_comparison(out_dir, title, obj_function, best, run=3, dim_domain=100, population_size=5000,
+                   elite_set_ratio=0.20, learning_rate=0.001, iteration=2000):
+    """
+
+    :param algorithm:
+    :param experiment:
+    :param run:
+    :param dim_domain:
+    :param population_size:
+    :param elite_set_ratio:
+    :param learning_rate:
+    :param iteration:
+    :return:
+    """
+    algorithms = [cem, nes, cma_es]
+
+    plt.figure()
+    plt.grid()
+
+    for algorithm in algorithms:
+        print('Running comparisons…')
+        avg_min = 0
+        avg_max = 0
+
+        for i in range(run):
+            plot_generations = False
+
+            _, min, max = algorithm(obj_function, dim_domain, population_size, elite_set_ratio, learning_rate,
+                                        iteration, out_dir_sphere, algorithm.__name__, plot_generations)
+            avg_min += min
+            avg_max += max
+
+        avg_min /= run
+        avg_max /= run
+
+        x = np.arange(iteration)
+
+        if best:
+            plt.plot(x, avg_min, label=algorithm.__name__)
+        else:
+            plt.plot(x, avg_max, label=algorithm.__name__)
+
+    plt.xlabel('generations', fontsize=11)
+    plt.ylabel('fitness values', fontsize=11)
+
+    plt.legend()
+    plt.title(title, weight='bold', fontsize=12)
+    plt.savefig(out_dir)
+    plt.close()
+
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 1 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -429,213 +481,241 @@ plt.close()
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 2 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-experiments = []
-
-best_fitness_sphere = []
-worse_fitness_sphere = []
-
-best_fitness_rastrigin = []
-worse_fitness_rastrigin = []
-
-average_run_times_sphere = []
-average_run_times_rastrigin = []
-
-# (a) Run CEM 3 times for both of test functions with 100-dimensional dim_domain.
-run(cem, experiment='baseline')
-
-# (b) Try different population size and elite set ratio and see what best performance you can obtain.
-run(cem, experiment='pop_size-1000', population_size=1000)
-run(cem, experiment='pop_size-3000', population_size=3000)
-
-run(cem, experiment='elite-40', elite_set_ratio=0.40)
-run(cem, experiment='elite-30', elite_set_ratio=0.30)
-run(cem, experiment='elite-10', elite_set_ratio=0.10)
-
-run(cem, experiment='pop_size-1000+elite-40', population_size=1000, elite_set_ratio=0.40)
-run(cem, experiment='pop_size-1000+elite-30', population_size=1000, elite_set_ratio=0.30)
-run(cem, experiment='pop_size-1000+elite-10', population_size=1000, elite_set_ratio=0.10)
-
-run(cem, experiment='pop_size-3000+elite-40', population_size=3000, elite_set_ratio=0.40)
-run(cem, experiment='pop_size-3000+elite-30', population_size=3000, elite_set_ratio=0.30)
-run(cem, experiment='pop_size-3000+elite-10', population_size=3000, elite_set_ratio=0.10)
-
-# (c) Try different number of generations.
-run(cem, experiment='iter-200', iteration=200)
-run(cem, experiment='iter-50', iteration=50)
-run(cem, experiment='iter-30', iteration=30)
-
-run(cem, experiment='iter-200+elite-30', elite_set_ratio=0.40, iteration=200)
-run(cem, experiment='pop_size-3000+iter-200+elite-30', population_size=3000, elite_set_ratio=0.40, iteration=200)
-
-sphere_data = {'textbf{experiment}': experiments,
-               'textbf{best fitness}': best_fitness_sphere,
-               'textbf{worse fitness}': worse_fitness_sphere,
-               'textbf{average run time}': average_run_times_sphere}
-
-rastrigin_data = {'textbf{experiment}': experiments,
-                  'textbf{best fitness}': best_fitness_rastrigin,
-                  'textbf{worse fitness}': worse_fitness_rastrigin,
-                  'textbf{average run time}': average_run_times_rastrigin}
-
-# Convert the dictionary into DataFrame
-sphere = pd.DataFrame(sphere_data)
-sphere = sphere.set_index('textbf{experiment}')
-
-check_dir('out/cem/')
-with open('out/cem/sphere-performance.tex', 'w') as latex_table:
-    latex_table.write(sphere.to_latex())
-
-rastrigin = pd.DataFrame(rastrigin_data)
-rastrigin = rastrigin.set_index('textbf{experiment}')
-
-check_dir('out/cem/')
-with open('out/cem/rastrigin-performance.tex', 'w') as latex_table:
-    latex_table.write(rastrigin.to_latex())
-
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 3 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-
-experiments = []
-
-best_fitness_sphere = []
-worse_fitness_sphere = []
-
-best_fitness_rastrigin = []
-worse_fitness_rastrigin = []
-
-average_run_times_sphere = []
-average_run_times_rastrigin = []
-
-# (a) Run NES 3 times for both of test functions with 100-dimensional dim_domain. (i.e. n = 100)
-# Note that you can uniformly sample the initial population parameters as long as they are reasonably far from the
-# global optimum.
-run(nes, experiment='baseline')
-
-# # (b) Try different population size and learning rate and see what best performance you can obtain.
-run(nes, experiment='pop_size-1000', population_size=1000)
-run(nes, experiment='pop_size-3000', population_size=3000)
-run(nes, experiment='pop_size-5000', population_size=5000)
-
-run(nes, experiment='lr-001', learning_rate=0.001)
-run(nes, experiment='lr-0001', elite_set_ratio=0.0001)
-run(nes, experiment='lr-00001', elite_set_ratio=0.00001)
-
-run(nes, experiment='pop_size-1000+lr-001', population_size=1000, learning_rate=0.001)
-run(nes, experiment='pop_size-1000+lr-0001', population_size=1000, learning_rate=0.0001)
-
-run(nes, experiment='pop_size-5000+lr-001', population_size=5000, learning_rate=0.001)
-run(nes, experiment='pop_size-5000+lr-0001', population_size=5000, learning_rate=0.0001)
-
+# experiments = []
+#
+# best_fitness_sphere = []
+# worse_fitness_sphere = []
+#
+# best_fitness_rastrigin = []
+# worse_fitness_rastrigin = []
+#
+# average_run_times_sphere = []
+# average_run_times_rastrigin = []
+#
+# # (a) Run CEM 3 times for both of test functions with 100-dimensional dim_domain.
+# run(cem, experiment='baseline')
+#
+# # (b) Try different population size and elite set ratio and see what best performance you can obtain.
+# run(cem, experiment='pop_size-1000', population_size=1000)
+# run(cem, experiment='pop_size-3000', population_size=3000)
+#
+# run(cem, experiment='elite-40', elite_set_ratio=0.40)
+# run(cem, experiment='elite-30', elite_set_ratio=0.30)
+# run(cem, experiment='elite-10', elite_set_ratio=0.10)
+#
+# run(cem, experiment='pop_size-1000+elite-40', population_size=1000, elite_set_ratio=0.40)
+# run(cem, experiment='pop_size-1000+elite-30', population_size=1000, elite_set_ratio=0.30)
+# run(cem, experiment='pop_size-1000+elite-10', population_size=1000, elite_set_ratio=0.10)
+#
+# run(cem, experiment='pop_size-3000+elite-40', population_size=3000, elite_set_ratio=0.40)
+# run(cem, experiment='pop_size-3000+elite-30', population_size=3000, elite_set_ratio=0.30)
+# run(cem, experiment='pop_size-3000+elite-10', population_size=3000, elite_set_ratio=0.10)
+#
 # # (c) Try different number of generations.
-run(nes, experiment='iter-2000', iteration=2000)
-run(nes, experiment='iter-5000', iteration=5000)
+# run(cem, experiment='iter-200', iteration=200)
+# run(cem, experiment='iter-50', iteration=50)
+# run(cem, experiment='iter-30', iteration=30)
+#
+# run(cem, experiment='iter-200+elite-30', elite_set_ratio=0.40, iteration=200)
+# run(cem, experiment='pop_size-3000+iter-200+elite-30', population_size=3000, elite_set_ratio=0.40, iteration=200)
+#
+# sphere_data = {'textbf{experiment}': experiments,
+#                'textbf{best fitness}': best_fitness_sphere,
+#                'textbf{worse fitness}': worse_fitness_sphere,
+#                'textbf{average run time}': average_run_times_sphere}
+#
+# rastrigin_data = {'textbf{experiment}': experiments,
+#                   'textbf{best fitness}': best_fitness_rastrigin,
+#                   'textbf{worse fitness}': worse_fitness_rastrigin,
+#                   'textbf{average run time}': average_run_times_rastrigin}
+#
+# # Convert the dictionary into DataFrame
+# sphere = pd.DataFrame(sphere_data)
+# sphere = sphere.set_index('textbf{experiment}')
+#
+# check_dir('out/cem/')
+# with open('out/cem/sphere-performance.tex', 'w') as latex_table:
+#     latex_table.write(sphere.to_latex())
+#
+# rastrigin = pd.DataFrame(rastrigin_data)
+# rastrigin = rastrigin.set_index('textbf{experiment}')
+#
+# check_dir('out/cem/')
+# with open('out/cem/rastrigin-performance.tex', 'w') as latex_table:
+#     latex_table.write(rastrigin.to_latex())
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 3 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+# experiments = []
+#
+# best_fitness_sphere = []
+# worse_fitness_sphere = []
+#
+# best_fitness_rastrigin = []
+# worse_fitness_rastrigin = []
+#
+# average_run_times_sphere = []
+# average_run_times_rastrigin = []
+#
+# # (a) Run NES 3 times for both of test functions with 100-dimensional dim_domain. (i.e. n = 100)
+# # Note that you can uniformly sample the initial population parameters as long as they are reasonably far from the
+# # global optimum.
+# run(nes, experiment='baseline')
+#
+# # # (b) Try different population size and learning rate and see what best performance you can obtain.
+# run(nes, experiment='pop_size-1000', population_size=1000)
+# run(nes, experiment='pop_size-3000', population_size=3000)
+# run(nes, experiment='pop_size-5000', population_size=5000)
+#
+# run(nes, experiment='lr-001', learning_rate=0.001)
+# run(nes, experiment='lr-0001', elite_set_ratio=0.0001)
+# run(nes, experiment='lr-00001', elite_set_ratio=0.00001)
+#
+# run(nes, experiment='pop_size-1000+lr-001', population_size=1000, learning_rate=0.001)
+# run(nes, experiment='pop_size-1000+lr-0001', population_size=1000, learning_rate=0.0001)
+#
+# run(nes, experiment='pop_size-5000+lr-001', population_size=5000, learning_rate=0.001)
+# run(nes, experiment='pop_size-5000+lr-0001', population_size=5000, learning_rate=0.0001)
+#
+# # # (c) Try different number of generations.
+# run(nes, experiment='iter-2000', iteration=2000)
+# run(nes, experiment='iter-5000', iteration=5000)
+#
+# run(nes, experiment='iter-2000+pop_size-5000', population_size=5000, iteration=2000)
+# run(nes, experiment='iter-5000+pop_size-5000', population_size=5000, iteration=5000)
+#
+# run(nes, experiment='iter-2000+pop_size-5000+lr-001', population_size=5000, learning_rate=0.001, iteration=2000)
+# run(nes, experiment='iter-2000+pop_size-5000+lr-0001', population_size=5000, learning_rate=0.0001, iteration=2000)
+#
+# sphere_data = {'textbf{experiment}': experiments,
+#                'textbf{best fitness}': best_fitness_sphere,
+#                'textbf{worse fitness}': worse_fitness_sphere,
+#                'textbf{average run time}': average_run_times_sphere}
+#
+# rastrigin_data = {'textbf{experiment}': experiments,
+#                   'textbf{best fitness}': best_fitness_rastrigin,
+#                   'textbf{worse fitness}': worse_fitness_rastrigin,
+#                   'textbf{average run time}': average_run_times_rastrigin}
+#
+# # Convert the dictionary into DataFrame
+# sphere = pd.DataFrame(sphere_data)
+# sphere = sphere.set_index('textbf{experiment}')
+#
+# check_dir('out/nes/')
+# with open('out/nes/sphere-performance.tex', 'w') as latex_table:
+#     latex_table.write(sphere.to_latex())
+#
+# rastrigin = pd.DataFrame(rastrigin_data)
+# rastrigin = rastrigin.set_index('textbf{experiment}')
+#
+# check_dir('out/nes/')
+# with open('out/nes/rastrigin-performance.tex', 'w') as latex_table:
+#     latex_table.write(rastrigin.to_latex())
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 4 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+# experiments = []
+#
+# best_fitness_sphere = []
+# worse_fitness_sphere = []
+#
+# best_fitness_rastrigin = []
+# worse_fitness_rastrigin = []
+#
+# average_run_times_sphere = []
+# average_run_times_rastrigin = []
+#
+# # (a) Run CMA-ES 3 times for both of test functions with 100-dimensional domain. (i.e. n = 100) Note that you can uniformly sample the initial population parameters as long as they are reasonably far from the global optimum.
+# run(cma_es, experiment='baseline')
+#
+# # (b) Try different population size and elite set ratio and see what best performance you can obtain.
+# run(cma_es, experiment='pop_size-1000', population_size=1000)
+# run(cma_es, experiment='pop_size-3000', population_size=3000)
+#
+# run(cma_es, experiment='elite-40', elite_set_ratio=0.40)
+# run(cma_es, experiment='elite-30', elite_set_ratio=0.30)
+# run(cma_es, experiment='elite-10', elite_set_ratio=0.10)
+#
+# run(cma_es, experiment='pop_size-1000+elite-40', population_size=1000, elite_set_ratio=0.40)
+# run(cma_es, experiment='pop_size-1000+elite-30', population_size=1000, elite_set_ratio=0.30)
+# run(cma_es, experiment='pop_size-1000+elite-10', population_size=1000, elite_set_ratio=0.10)
+#
+# run(cma_es, experiment='pop_size-3000+elite-40', population_size=3000, elite_set_ratio=0.40)
+# run(cma_es, experiment='pop_size-3000+elite-30', population_size=3000, elite_set_ratio=0.30)
+# run(cma_es, experiment='pop_size-3000+elite-10', population_size=3000, elite_set_ratio=0.10)
+#
+# # (c) Try different number of generations.
+# run(cma_es, experiment='iter-200', iteration=200)
+# run(cma_es, experiment='iter-50', iteration=50)
+# run(cma_es, experiment='iter-30', iteration=30)
+#
+# run(cma_es, experiment='iter-200+elite-30', elite_set_ratio=0.40, iteration=200)
+# run(cma_es, experiment='pop_size-3000+iter-200+elite-30', population_size=3000, elite_set_ratio=0.40, iteration=200)
 
-run(nes, experiment='iter-2000+pop_size-5000', population_size=5000, iteration=2000)
-run(nes, experiment='iter-5000+pop_size-5000', population_size=5000, iteration=5000)
 
-run(nes, experiment='iter-2000+pop_size-5000+lr-001', population_size=5000, learning_rate=0.001, iteration=2000)
-run(nes, experiment='iter-2000+pop_size-5000+lr-0001', population_size=5000, learning_rate=0.0001, iteration=2000)
-
-sphere_data = {'textbf{experiment}': experiments,
-               'textbf{best fitness}': best_fitness_sphere,
-               'textbf{worse fitness}': worse_fitness_sphere,
-               'textbf{average run time}': average_run_times_sphere}
-
-rastrigin_data = {'textbf{experiment}': experiments,
-                  'textbf{best fitness}': best_fitness_rastrigin,
-                  'textbf{worse fitness}': worse_fitness_rastrigin,
-                  'textbf{average run time}': average_run_times_rastrigin}
-
-# Convert the dictionary into DataFrame
-sphere = pd.DataFrame(sphere_data)
-sphere = sphere.set_index('textbf{experiment}')
-
-check_dir('out/nes/')
-with open('out/nes/sphere-performance.tex', 'w') as latex_table:
-    latex_table.write(sphere.to_latex())
-
-rastrigin = pd.DataFrame(rastrigin_data)
-rastrigin = rastrigin.set_index('textbf{experiment}')
-
-check_dir('out/nes/')
-with open('out/nes/rastrigin-performance.tex', 'w') as latex_table:
-    latex_table.write(rastrigin.to_latex())
-
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 4 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-
-experiments = []
-
-best_fitness_sphere = []
-worse_fitness_sphere = []
-
-best_fitness_rastrigin = []
-worse_fitness_rastrigin = []
-
-average_run_times_sphere = []
-average_run_times_rastrigin = []
-
-# (a) Run CMA-ES 3 times for both of test functions with 100-dimensional domain. (i.e. n = 100) Note that you can uniformly sample the initial population parameters as long as they are reasonably far from the global optimum.
-run(cma_es, experiment='baseline')
-
-# (b) Try different population size and elite set ratio and see what best performance you can obtain.
-run(cma_es, experiment='pop_size-1000', population_size=1000)
-run(cma_es, experiment='pop_size-3000', population_size=3000)
-
-run(cma_es, experiment='elite-40', elite_set_ratio=0.40)
-run(cma_es, experiment='elite-30', elite_set_ratio=0.30)
-run(cma_es, experiment='elite-10', elite_set_ratio=0.10)
-
-run(cma_es, experiment='pop_size-1000+elite-40', population_size=1000, elite_set_ratio=0.40)
-run(cma_es, experiment='pop_size-1000+elite-30', population_size=1000, elite_set_ratio=0.30)
-run(cma_es, experiment='pop_size-1000+elite-10', population_size=1000, elite_set_ratio=0.10)
-
-run(cma_es, experiment='pop_size-3000+elite-40', population_size=3000, elite_set_ratio=0.40)
-run(cma_es, experiment='pop_size-3000+elite-30', population_size=3000, elite_set_ratio=0.30)
-run(cma_es, experiment='pop_size-3000+elite-10', population_size=3000, elite_set_ratio=0.10)
-
-# (c) Try different number of generations.
-run(cma_es, experiment='iter-200', iteration=200)
-run(cma_es, experiment='iter-50', iteration=50)
-run(cma_es, experiment='iter-30', iteration=30)
-
-run(cma_es, experiment='iter-200+elite-30', elite_set_ratio=0.40, iteration=200)
-run(cma_es, experiment='pop_size-3000+iter-200+elite-30', population_size=3000, elite_set_ratio=0.40, iteration=200)
-
-
-sphere_data = {'textbf{experiment}': experiments,
-               'textbf{best fitness}': best_fitness_sphere,
-               'textbf{worse fitness}': worse_fitness_sphere,
-               'textbf{average run time}': average_run_times_sphere}
-
-rastrigin_data = {'textbf{experiment}': experiments,
-                  'textbf{best fitness}': best_fitness_rastrigin,
-                  'textbf{worse fitness}': worse_fitness_rastrigin,
-                  'textbf{average run time}': average_run_times_rastrigin}
-
-# Convert the dictionary into DataFrame
-sphere = pd.DataFrame(sphere_data)
-sphere = sphere.set_index('textbf{experiment}')
-
-check_dir('out/cma_es/')
-with open('out/cma_es/sphere-performance.tex', 'w') as latex_table:
-    latex_table.write(sphere.to_latex())
-
-rastrigin = pd.DataFrame(rastrigin_data)
-rastrigin = rastrigin.set_index('textbf{experiment}')
-
-check_dir('out/cma_es/')
-with open('out/cma_es/rastrigin-performance.tex', 'w') as latex_table:
-    latex_table.write(rastrigin.to_latex())
+# sphere_data = {'textbf{experiment}': experiments,
+#                'textbf{best fitness}': best_fitness_sphere,
+#                'textbf{worse fitness}': worse_fitness_sphere,
+#                'textbf{average run time}': average_run_times_sphere}
+#
+# rastrigin_data = {'textbf{experiment}': experiments,
+#                   'textbf{best fitness}': best_fitness_rastrigin,
+#                   'textbf{worse fitness}': worse_fitness_rastrigin,
+#                   'textbf{average run time}': average_run_times_rastrigin}
+#
+# # Convert the dictionary into DataFrame
+# sphere = pd.DataFrame(sphere_data)
+# sphere = sphere.set_index('textbf{experiment}')
+#
+# check_dir('out/cma_es/')
+# with open('out/cma_es/sphere-performance.tex', 'w') as latex_table:
+#     latex_table.write(sphere.to_latex())
+#
+# rastrigin = pd.DataFrame(rastrigin_data)
+# rastrigin = rastrigin.set_index('textbf{experiment}')
+#
+# check_dir('out/cma_es/')
+# with open('out/cma_es/rastrigin-performance.tex', 'w') as latex_table:
+#     latex_table.write(rastrigin.to_latex())
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 5 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# iter: 2000
+# pop: 5000
+
 
 # (a) Plot the comparison of CEM, NES and CMA-ES for the best fitness in each generation.
 # Note that this should be one single figure with three curves, each for one algorithm.
 
+# Sphere
+out_dir_sphere = 'out/comparison/sphere/'
+check_dir(out_dir_sphere)
+title = 'CEM, NES and CMA-ES comparison\n Best Sphere Fitness'
+
+run_comparison(out_dir_sphere + 'best-comparison.pdf', title, sphere_test, best=True)
+
+# Rastrigin
+out_dir_rastrigin = 'out/comparison/rastrigin/'
+check_dir(out_dir_rastrigin)
+title = 'CEM, NES and CMA-ES comparison\n Best Rastrigin Fitness'
+
+run_comparison(out_dir_rastrigin + 'best-comparison.pdf', title, rastrigin_test, best=True)
+
 # (b) Plot the comparison of CEM, NES and CMA-ES for the worst fitness in each generation.
 # Note that this should be one single figure with three curves, each for one algorithm.
 
-# (c) For each test function, which algorithm is best? which is the worst?
+# Sphere
+title = 'CEM, NES and CMA-ES comparison\n Worst Sphere Fitness'
+
+run_comparison(out_dir_sphere + 'worst-comparison.pdf', title, sphere_test, best=False)
+
+# Rastrigin
+title = 'CEM, NES and CMA-ES comparison\n Worst Rastrigin Fitness'
+
+run_comparison(out_dir_rastrigin + 'worst-comparison.pdf', title, rastrigin_test, best=False)
+
+# # (c) For each test function, which algorithm is best? which is the worst?
