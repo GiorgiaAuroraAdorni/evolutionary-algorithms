@@ -1,43 +1,49 @@
 \section{Cross-Entropy Method (CEM)}
-
-The first algorithm implemented is the \textbf{Cross-Entropy Method (CEM)}.
-
-The initial population parameters are initialised reasonably far from the global optimum, in particular, the mean is uniformly sample in the range [-5, 5] and the variance is uniformly sample in the range [0, 1].
-
-The algorithm has been run for the baseline model, and then trying different population size and elite set ratio, and also with different number of generations.
-In Table \ref{tab:cem-param} are shown the different combinations of parameter used.
-
-\begin{figure}[htb]
+\begin{figure}[H]
 	\centering
 	
-	\begin{tabular}{lcccc}
+	\begin{tabular}{lccc}
 		\toprule
-		\textbf{experiment} & \textbf{domain} & \textbf{population} & \textbf{elite} &
+		\textbf{experiment} & \textbf{population} & \textbf{elite} &
 		\textbf{generations} \\
 		\midrule
-		\texttt{baseline 						}	& 100 & 30 		& 0.20 	& 100\\
-		\texttt{pop\_size-100 					}	& 100 & 100 	& 0.20 	& 100\\
-		\texttt{pop\_size-1000 					}	& 100 & 1000 	& 0.20 	& 100\\
-		\texttt{elite-30 						}	& 100 & 30 		& 0.30 	& 100\\
-		\texttt{elite-10 						}	& 100 & 30 		& 0.10 	& 100\\
-		\texttt{pop\_size-100+elite-30 			}	& 100 & 100 	& 0.30 	& 100\\
-		\texttt{pop\_size-100+elite-10 			}	& 100 & 100 	& 0.10 	& 100\\
-		\texttt{pop\_size-1000+elite-30 		}	& 100 & 1000 	& 0.30 	& 100\\
-		\texttt{pop\_size-1000+elite-10 		}	& 100 & 1000 	& 0.10 	& 100\\
-		\texttt{iter-50 						}	& 100 & 30 		& 0.20 	& 50\\
-		\texttt{iter-30 						}	& 100 & 30 		& 0.20 	& 30\\
-		\texttt{iter-30+elite-10 				}	& 100 & 30 		& 0.10 	& 30\\
-		\texttt{iter-50+elite-10 				}	& 100 & 30 	& 0.10 	& 50\\
-		\texttt{iter-200+pop\_size-1000+elite-30} 	& 100 & 1000 	& 0.30 	& 200\\	
+		\texttt{baseline 						}	 & 100 	& 0.20 	& 100\\
+		\texttt{pop\_size-1000 					}	 & 1000 	& 0.20 	& 100\\
+		\texttt{pop\_size-3000 					}	 & 3000 	& 0.20 	& 100\\
+		\texttt{elite-40 						}	 & 100 	& 0.40 	& 100\\
+		\texttt{elite-30 						}	 & 100 	& 0.30 	& 100\\
+		\texttt{elite-10 						}	 & 100 	& 0.10 	& 100\\
+		\texttt{pop\_size-1000+elite-40 		}	 & 1000 	& 0.40 	& 100\\
+		\texttt{pop\_size-1000+elite-30 		}	 & 1000 	& 0.30 	& 100\\
+		\texttt{pop\_size-1000+elite-10 		}	 & 1000 	& 0.10 	& 100\\
+		\texttt{pop\_size-3000+elite-40 		}	 & 3000 	& 0.40 	& 100\\
+		\texttt{pop\_size-3000+elite-30 		}	 & 3000 	& 0.30 	& 100\\
+		\texttt{pop\_size-3000+elite-10 		}	 & 3000 	& 0.10 	& 100\\
+		\texttt{iter-200 						}	 & 100 	& 0.20 	& 200\\
+		\texttt{iter-50 						}	 & 100 	& 0.20 	& 50\\
+		\texttt{iter-30 						}	 & 100 	& 0.20 	& 30\\
+		\texttt{iter-200+elite-30 				}	 & 100 	& 0.30 	& 200\\
+		\texttt{iter-200+pop\_size-3000+elite-30} 	 & 3000 	& 0.30 	& 200\\	
 		\bottomrule
 	\end{tabular}
 	\captionof{table}{CEM parameters}
 	\label{tab:cem-param}
 \end{figure}
 
-For all the experiments, the algorithm has been run 3 times for both of test functions. In order to evaluate the performance, for each pair of experiment and test function, the best and the worse fitness for each generation (averaged over 3 runs) has been plotted. 
+The first algorithm implemented is the \textbf{Cross-Entropy Method (CEM)}. 
 
-In Tables \ref{tab:cem-performance-s} and \ref{tab:cem-performance-r} are summarised the results.
+Different execution of the algorithm has been performed. The first experiment is called baseline, and it uses the same parameters as for the following algorithms. After that, were made some attempts of improving the performances trying different population size and elite set ratio, and also with different number of generations. In all the experiments the domain size is fixed to 100 dimension.
+
+For all the experiments, the initial population parameters are initialised reasonably far from the global optimum, in particular, the mean is uniformly sample in the range [-5, 5] and the variance is uniformly sample in the range [4, 5].
+
+In Table \ref{tab:cem-param} are shown the different combinations of parameter used.
+\bigskip
+
+The algorithm has been run 3 times for both of test functions. 
+In order to evaluate the performance, for each pair of experiment and test function, the best and the worse fitness for each generation (averaged over 3 runs) has been plotted. 
+ 
+In Tables \ref{tab:cem-performance-s} and \ref{tab:cem-performance-r} are summarised the results. 
+\bigskip
 
 \begin{figure}[htb]
 	\centering
@@ -46,26 +52,58 @@ In Tables \ref{tab:cem-performance-s} and \ref{tab:cem-performance-r} are summar
 		\toprule
 		\textbf{experiment} & \textbf{best fitness} & \textbf{worse fitness} & \textbf{avg run time} \\
 		\midrule
-		\texttt{baseline 						}	& 408.15 &                408.15 &                 0.36 sec \\
-		\texttt{pop\_size-100 					}	&   76.19 &                 76.31 &                 0.41 sec \\
-		\texttt{pop\_size-1000 					}	&     0.0 &                   0.0 &                 0.89 sec \\
-		\texttt{elite-30 						}	& 353.41 &                353.41 &                 0.34 sec \\
-		\texttt{elite-10 						}	& 549.93 &                549.93 &                 0.34 sec \\
-		\texttt{pop\_size-100+elite-30 			}	&   39.73 &                 40.13 &                 0.38 sec \\
-		\texttt{pop\_size-100+elite-10 			}	&  168.58 &                168.58 &                 0.38 sec \\
-		\texttt{pop\_size-1000+elite-30 		}	&     0.0 &                   0.0 &                 0.88 sec \\
-		\texttt{pop\_size-1000+elite-10 		}	&     0.0 &                   0.0 &                 0.88 sec \\
-		\texttt{iter-50 						}	& 365.66 &                365.69 &                 0.33 sec \\
-		\texttt{iter-30 						}	& 405.81 &                407.39 &                 0.32 sec \\
-		\texttt{iter-30+elite-10 				}	& 606.47 &                606.48 &                 0.33 sec \\
-		\texttt{iter-50+elite-10 				}	& 591.32 &                591.32 &                 0.43 sec \\
-		\texttt{iter-200+pop\_size-1000+elite-30} 	&     0.0 &                   0.0 &                 1.39 sec \\	
+		\texttt{baseline 						}		 &	  7.17 &	   7.19 &	  0.43 sec \\
+		\texttt{pop\_size-1000 					}		&	   0.0 &	    0.0 &	  0.94 sec \\
+		\texttt{pop\_size-3000 					}		&	   0.0 &	    0.0 &	  2.24 sec \\
+		\texttt{elite-40 						}		 &	  2.65 &	   2.71 &	  0.54 sec \\
+		\texttt{elite-30 						}		 &	  1.54 &	   1.56 &	  0.42 sec \\
+		\texttt{elite-10 						}		 &	 93.74 &	  93.74 &	  0.42 sec \\
+		\texttt{pop\_size-1000+elite-40 		}	 &	   0.0 &	    0.0 &	  0.95 sec \\
+		\texttt{pop\_size-1000+elite-30 		}	 &	   0.0 &	    0.0 &	  0.98 sec \\
+		\texttt{pop\_size-1000+elite-10 		}	 &	   0.0 &	    0.0 &	  0.95 sec \\
+		\texttt{pop\_size-3000+elite-40 		}	 &	   0.0 &	    0.0 &	  2.17 sec \\
+		\texttt{pop\_size-3000+elite-30 		}	 &	   0.0 &	    0.0 &	  2.27 sec \\
+		\texttt{pop\_size-3000+elite-10 		}	 &	   0.0 &	    0.0 &	  2.24 sec \\
+		\texttt{iter-200 						}		&	  8.57 &	   8.57 &	  0.62 sec \\
+		\texttt{iter-50 						}	&	 12.09 &	   12.9 &	  0.43 sec \\
+		\texttt{iter-30 						}	&	 27.18 &	  35.71 &	  0.36 sec \\
+		\texttt{iter-200+elite-30 				}	&	  0.18 &	   0.18 &	   0.5 sec \\
+		\texttt{iter-200+pop\_size-3000+elite-30} 	 &	   0.0 &	    0.0 &	  3.63 sec \\
 		\bottomrule
 	\end{tabular}
 	\captionof{table}{Sphere CEM performance}
 	\label{tab:cem-performance-s}
 \end{figure}
 
+In Figure \ref{fig:cem-s-fitness/baseline} is plotted the best and the worse fitness for each generation (averaged over 3 runs) for the baseline model. Below, in Figure \ref{fig:cem-s-fitness/1000} and \ref{fig:cem-s-fitness/200}, are plotted the fitness of the two models that perform better with the sphere function.
+
+For the sphere function, it is possible to see that simply using a large enough population size the algorithm converges. 
+Moreover, increasing the elite set ratio the algorithm converges quickly.
+ 
+ \begin{figure}[H]
+ 	\centering
+ 	\begin{minipage}[b]{.6\textwidth}
+ 		\includegraphics[width=\linewidth]{../src/out/cem/baseline/sphere/fitness.pdf}	
+ 	\end{minipage}
+	 \caption{Sphere fitness \texttt{baseline}}
+	 \label{fig:cem-s-fitness/baseline}
+	 
+	 \begin{minipage}[b]{.6\textwidth}
+	 	\includegraphics[width=\linewidth]{../src/out/cem/pop_size-1000/sphere/fitness.pdf}	
+	 \end{minipage}
+	 \caption{Sphere fitness \texttt{pop\_size-1000}}
+	 \label{fig:cem-s-fitness/1000}
+	 
+	 \begin{minipage}[b]{.6\textwidth}
+	 	\includegraphics[width=\linewidth]{../src/out/cem/iter-200+elite-30/sphere/fitness.pdf}	
+	 \end{minipage}
+	 \caption{Sphere fitness \texttt{iter-200+elite-30}}
+	 \label{fig:cem-s-fitness/200}
+\end{figure}
+
+
+For the rastrigin function, it is necessary not only to increase the size of the population but also the number of generations to allow the algorithm to converge. Moreover, in this case, by decreasing the elite set ratio the algorithm performs better.  
+
 \begin{figure}[htb]
 	\centering
 	
@@ -73,20 +111,23 @@ In Tables \ref{tab:cem-performance-s} and \ref{tab:cem-performance-r} are summar
 		\toprule
 		\textbf{experiment} & \textbf{best fitness} & \textbf{worse fitness} & \textbf{avg run time} \\
 		\midrule
-		\texttt{baseline 						}	&  917.88 &                917.88 &                 0.56 sec \\
-		\texttt{pop\_size-100 					}	&  372.42 &                372.93 &                 0.62 sec \\
-		\texttt{pop\_size-1000 					}	&  340.85 &                 603.9 &                 1.27 sec \\
-		\texttt{elite-30 						}	&  873.88 &                 873.9 &                 0.55 sec \\
-		\texttt{elite-10 						}	&  1268.29 &               1268.29 &                 0.55 sec \\
-		\texttt{pop\_size-100+elite-30 			}	&  314.37 &                316.53 &                  0.6 sec \\
-		\texttt{pop\_size-100+elite-10 			}	&  559.49 &                 559.5 &                  0.6 sec \\
-		\texttt{pop\_size-1000+elite-30 		}	&  604.86 &               1016.53 &                 1.27 sec \\
-		\texttt{pop\_size-1000+elite-10 		}	&  94.1 &                 147.3 &                 1.24 sec \\
-		\texttt{iter-50 						}	&  916.63 &                917.04 &                 0.53 sec \\
-		\texttt{iter-30 						}	&  975.49 &                997.92 &                 0.53 sec \\
-		\texttt{iter-30+elite-10 				}	& 1228.54 &               1228.58 &                 0.54 sec \\
-		\texttt{iter-50+elite-10 				}	& 1276.75 &               1276.75 &                  0.7 sec \\
-		\texttt{iter-200+pop\_size-1000+elite-30} 	&   33.64 &                 35.85 &                 1.97 sec \\
+		\texttt{baseline 						}		 &	 146.9 &	 147.84 &	  0.74 sec \\
+		\texttt{pop\_size-1000 					}			   &	408.33 &	  726.5 &	  1.39 sec \\
+		\texttt{pop\_size-3000 					}			   &	561.48 &	  998.0 &	   3.0 sec \\
+		\texttt{elite-40 						}		 &	183.21 &	 308.04 &	  0.64 sec \\
+		\texttt{elite-30 						}		 &	143.56 &	 173.52 &	  0.68 sec \\
+		\texttt{elite-10 						}		 &	342.08 &	 342.11 &	  0.66 sec \\
+		\texttt{pop\_size-1000+elite-40 		}	  &	 754.4 &	1225.99 &	  1.37 sec \\
+		\texttt{pop\_size-1000+elite-30 		}	  &	647.67 &	1084.44 &	  1.37 sec \\
+		\texttt{pop\_size-1000+elite-10 		}	  &	 70.65 &	 194.74 &	   1.4 sec \\
+		\texttt{pop\_size-3000+elite-40 		}	  &	774.94 &	1290.65 &	  3.08 sec \\
+		\texttt{pop\_size-3000+elite-30 		}	  &	740.86 &	1245.91 &	  3.37 sec \\
+		\texttt{pop\_size-3000+elite-10 		}	  &	117.32 &	 317.21 &	   2.9 sec \\
+		\texttt{iter-200 						}	 &	134.35 &	 134.36 &	  0.88 sec \\
+		\texttt{iter-50 						}	  &	449.25 &	 641.98 &	   0.8 sec \\
+		\texttt{iter-30 						}	  &	831.28 &	1178.28 &	  0.64 sec \\
+		\texttt{iter-200+elite-30 				}	 &	 83.65 &	  83.76 &	  0.74 sec \\
+		\texttt{iter-200+pop\_size-3000+elite-30} 	&	 15.85 &	   45.2 &	  4.96 sec \\
 		\bottomrule
 	\end{tabular}
 	\captionof{table}{Rastrigin CEM performance}
@@ -94,4 +135,32 @@ In Tables \ref{tab:cem-performance-s} and \ref{tab:cem-performance-r} are summar
 \end{figure}
 
 
-(c) Try . What is the minimum number of gener- ations that you can obtain a solution close enough to the global optimum?
+In Figure \ref{fig:cem-r-fitness/baseline} is plotted the best and the worse fitness for each generation (averaged over 3 runs) for the baseline model. Below, in Figure \ref{fig:cem-r-fitness/1000} and \ref{fig:cem-r-fitness/200}, are plotted the fitness of the two models that perform better with the rastrigin function.
+
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[b]{.6\textwidth}
+		\includegraphics[width=\linewidth]{../src/out/cem/baseline/rastrigin/fitness.pdf}	
+	\end{minipage}
+	\caption{Sphere fitness \texttt{baseline}}
+	\label{fig:cem-r-fitness/baseline}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[b]{.6\textwidth}
+		\includegraphics[width=\linewidth]{../src/out/cem/pop_size-1000+elite-10/rastrigin/fitness.pdf}	
+	\end{minipage}
+	\caption{Sphere fitness \texttt{pop\_size-1000}}
+	\label{fig:cem-r-fitness/1000}
+	
+	\begin{minipage}[b]{.6\textwidth}
+		\includegraphics[width=\linewidth]{../src/out/cem/pop_size-3000+iter-200+elite-30/rastrigin/fitness.pdf}	
+	\end{minipage}
+	\caption{Sphere fitness \texttt{iter-200+elite-30}}
+	\label{fig:cem-r-fitness/200}
+\end{figure}
+
+
+For the sphere function, 40 generations are enough to obtain a solution close enough to the global optimum, as shown for the experiment \texttt{pop\_size-1000}.
+
+For the rastrigin function and the parameter tested, at least 200 generations are necessary to obtain a solution close enough to the global optimum, as shown for the experiment \texttt{iter-200+elite-30}.

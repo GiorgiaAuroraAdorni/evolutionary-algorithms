@@ -128,19 +128,15 @@
 In this assignment, we are going to implement a few evolutionary algorithms against test functions and analyze the characteristics of different algorithms.
 Let $f : \mathbb{R}^n \rightarrow \mathbb{R}$ be a test function with n-dimensional domain.
 
-
-\begin{itemize}
-	\item[•] Spere function:
+\noindent\textbf{Sphere function}:
 	\begin{equation}
 		f(\overline{x}) = \sum_{i=1}^nx_i^2 \mbox{.}
 	\end{equation}
-	\item[•] Rastrigin function:
+\textbf{Rastrigin functionction}:
 	\begin{equation}
 	f(\overline{x}) = An + \sum_{i=1}^n [x_i^2-A \cos(2\pi x_i)]
 	\end{equation}
-	where $A = 10$.
-\end{itemize}
-The search domain is constraint as $x_i \in [-5, 5]$.
+	where $A = 10$. The search domain is constraint as $x_i \in [-5, 5]$.
 
 \section{Test Functions}
 
@@ -161,9 +157,6 @@ In Figure \ref{fig:s} and \ref{fig:r} are shown the 2D contour-plot of 2-dimensi
 		\label{fig:r}
 	\end{minipage}
 \end{figure}
-For each test function, 100 points has been uniformly sampled in the domain and evaluated with the test function. This points are shown in Figure \ref{fig:s-eval} and \ref{fig:r-eval}. 
-
-Filling the contours and showing the colour-map it is easier to see which are the regions of the global optimum. All the points with value close to 0, the ones in purple, belong to the global optimal region.
 
 \begin{figure}[htb]
 	\begin{minipage}[b]{.49\textwidth}
@@ -181,6 +174,10 @@ Filling the contours and showing the colour-map it is easier to see which are th
 	\end{minipage}
 \end{figure}
 
+For each test function, 100 points has been uniformly sampled in the domain and evaluated with the test function. This points are shown in Figure \ref{fig:s-eval} and \ref{fig:r-eval}. 
+Filling the contours and showing the colour-map it is easier to see which are the regions of the global optimum. All the points with value close to 0, the ones in purple, belong to the global optimal region.
+
+
 For the sphere, the points are concentrated in the central region of the figure. 
 
 For the rastrigin function evaluate the samples is many more complicated, since the function has many local minima. However, the global optimum is located in the centre of plot. For this reason, it will be seen later that finding the global optimum of this function will be difficult.
@@ -188,8 +185,6 @@ For the rastrigin function evaluate the samples is many more complicated, since 
 \input{cem}
 \input{nes}
 \input{cmaes}
-
-	
 			
 \section{Benchmarking}
 Plot the comparison of CEM, NES and CMA-ES for the best fitness in each generation
