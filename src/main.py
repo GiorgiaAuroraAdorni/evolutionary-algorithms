@@ -54,8 +54,8 @@ def plot_2d_contour(obj_function):
     data = np.dstack((X, Y))
 
     S = obj_function(data)
+
     plt.contour(X, Y, S)
-    # plt.plot(X, Y, 'ko', ms=3)
 
 
 def plot_fitness(out_dir, name, algo_name, x, y1, y2, title):
@@ -370,114 +370,144 @@ def run(algorithm, experiment, run=3, dim_domain=100, population_size=30, elite_
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 1 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+x = np.linspace(-5, 5, 100)
+y = np.linspace(-5, 5, 100)
 
-# # (a) Generate an 2D contour plot of 2-dimensional Sphere function
-# plot_2d_contour(sphere_test)
-#
-# # (b) Generate an 2D contour plot of 2-dimensional Rastrigin function
-# plot_2d_contour(rastrigin_test)
-#
-#
-# # TODO (c) For each test function, uniformly sample 100 points in the domain
-# n = 2
-# xy = np.random.uniform(-5, 5, [100, n])
-#
-# # TODO evaluate them with the test function and guess what might be the region of the global optimum.
-# S_eval = sphere_test(xy)
-#
-# R_eval = rastrigin_test(xy)
+X, Y = np.meshgrid(x, y)
+data = np.dstack((X, Y))
+
+# (a) Generate an 2D contour plot of 2-dimensional Sphere function
+S = sphere_test(data)
+
+plt.figure()
+plt.contourf(X, Y, S, alpha=0.8)
+plt.colorbar()
+plt.savefig('out/' + sphere_test.__name__ + '.pdf')
+
+# (b) Generate an 2D contour plot of 2-dimensional Rastrigin function
+R = rastrigin_test(data)
+
+plt.figure()
+plt.contourf(X, Y, R, alpha=0.8)
+plt.colorbar()
+plt.savefig('out/' + rastrigin_test.__name__ + '.pdf')
+
+
+# (c) For each test function, uniformly sample 100 points in the domain
+n = 2
+xy = np.random.uniform(-5, 5, [100, 2])
+
+# TODO evaluate them with the test function and guess what might be the region of the global optimum.
+# X, Y = np.meshgrid(xy[:, 0], xy[:, 0])
+# data = np.dstack((X, Y))
+
+S_eval = sphere_test(xy)
+
+plt.figure()
+plt.scatter(xy[:, 0], xy[:, 1], c=S_eval, alpha=0.8)
+plt.colorbar()
+plt.savefig('out/' + sphere_test.__name__ + '-eval.pdf')
+plt.close()
+
+R_eval = rastrigin_test(xy)
+
+plt.figure()
+plt.scatter(xy[:, 0], xy[:, 1], c=R_eval, alpha=0.8)
+plt.colorbar()
+plt.savefig('out/' + rastrigin_test.__name__ + '-eval.pdf')
+plt.close()
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 2 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 
 # (a) Run CEM 3 times for both of test functions with 100-dimensional dim_domain.
-run(cem, experiment='baseline')
-
-# (b) Try different population size and elite set ratio and see what best performance you can obtain.
-run(cem, experiment='pop_size-100', population_size=100)
-run(cem, experiment='pop_size-1000', population_size=1000)
-
-run(cem, experiment='elite-30', elite_set_ratio=0.30)
-run(cem, experiment='elite-10', elite_set_ratio=0.10)
-
-run(cem, experiment='pop_size-100+elite-30', population_size=100, elite_set_ratio=0.30)
-run(cem, experiment='pop_size-100+elite-10', population_size=100, elite_set_ratio=0.10)
-
-run(cem, experiment='pop_size-1000+elite-30', population_size=1000, elite_set_ratio=0.30)
-run(cem, experiment='pop_size-1000+elite-10', population_size=1000, elite_set_ratio=0.10)
-
-# (c) Try different number of generations.
-run(cem, experiment='iteration-50', iteration=50)
-run(cem, experiment='iteration-30', iteration=30)
-
-run(cem, experiment='iteration-30+elite-10', elite_set_ratio=0.10, iteration=30)
-run(cem, experiment='iteration-50+elite-10', elite_set_ratio=0.10, iteration=50)
-run(cem, experiment='iteration-200+pop_size-1000+elite-30', population_size=1000, elite_set_ratio=0.30, iteration=200)
-
-# TODO What is the minimum number of generations that you can obtain a solution close enough to the global optimum?
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 3 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-# # (a) Run NES 3 times for both of test functions with 100-dimensional dim_domain. (i.e. n = 100)
-# # Note that you can uniformly sample the initial population parameters as long as they are reasonably far from the
-# # global optimum.
-run(nes, experiment='baseline')
-
-# # (b) Try different population size and learning rate and see what best performance you can obtain.
-run(nes, experiment='pop_size-100', population_size=100)
-run(nes, experiment='pop_size-1000', population_size=1000)
-run(nes, experiment='pop_size-5000', population_size=5000)
-
-run(nes, experiment='lr-001', learning_rate=0.001)
-run(nes, experiment='lr-0001', elite_set_ratio=0.0001)
-run(nes, experiment='lr-00001', elite_set_ratio=0.00001)
-
-run(nes, experiment='pop_size-1000+lr-001', population_size=1000, learning_rate=0.001)
-run(nes, experiment='pop_size-1000+lr-0001', population_size=1000, learning_rate=0.0001)
-run(nes, experiment='pop_size-5000+lr-001', population_size=5000, learning_rate=0.001)
-run(nes, experiment='pop_size-5000+lr-0001', population_size=5000, learning_rate=0.0001)
-
+# run(cem, experiment='baseline')
+#
+# # (b) Try different population size and elite set ratio and see what best performance you can obtain.
+# run(cem, experiment='pop_size-100', population_size=100)
+# run(cem, experiment='pop_size-1000', population_size=1000)
+#
+# run(cem, experiment='elite-30', elite_set_ratio=0.30)
+# run(cem, experiment='elite-10', elite_set_ratio=0.10)
+#
+# run(cem, experiment='pop_size-100+elite-30', population_size=100, elite_set_ratio=0.30)
+# run(cem, experiment='pop_size-100+elite-10', population_size=100, elite_set_ratio=0.10)
+#
+# run(cem, experiment='pop_size-1000+elite-30', population_size=1000, elite_set_ratio=0.30)
+# run(cem, experiment='pop_size-1000+elite-10', population_size=1000, elite_set_ratio=0.10)
+#
 # # (c) Try different number of generations.
-run(nes, experiment='iteration-2000', iteration=2000)
-run(nes, experiment='iteration-5000', iteration=5000)
-
-run(nes, experiment='iteration-2000+pop_size-1000', population_size=1000, iteration=2000)
-run(nes, experiment='iteration-5000+pop_size-1000', population_size=1000, iteration=5000)
-
-run(nes, experiment='iteration-2000+pop_size-5000', population_size=5000, iteration=2000)
-run(nes, experiment='iteration-5000+pop_size-5000', population_size=5000, iteration=5000)
-
-run(nes, experiment='iteration-2000+pop_size-1000+lr-001', population_size=1000, learning_rate=0.001, iteration=2000)
-run(nes, experiment='iteration-2000+pop_size-1000+lr-0001', population_size=1000, learning_rate=0.0001, iteration=2000)
-run(nes, experiment='iteration-2000+pop_size-5000+lr-001', population_size=5000, learning_rate=0.001, iteration=2000)
-run(nes, experiment='iteration-2000+pop_size-5000+lr-0001', population_size=5000, learning_rate=0.0001, iteration=2000)
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 4 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-# (a) Run CMA-ES 3 times for both of test functions with 100-dimensional domain. (i.e. n = 100) Note that you can uniformly sample the initial population parameters as long as they are reasonably far from the global optimum.
-run(cma_es, experiment='baseline')
-
-# (b) Try different population size and learning rate and see what best performance you can obtain.
-run(cma_es, experiment='pop_size-100', population_size=100)
-run(cma_es, experiment='pop_size-1000', population_size=1000)
-
-run(cma_es, experiment='elite-30', elite_set_ratio=0.30)
-run(cma_es, experiment='elite-10', elite_set_ratio=0.10)
-
-run(cma_es, experiment='pop_size-100+elite-30', population_size=100, elite_set_ratio=0.30)
-run(cma_es, experiment='pop_size-100+elite-10', population_size=100, elite_set_ratio=0.10)
-
-run(cma_es, experiment='pop_size-1000+elite-30', population_size=1000, elite_set_ratio=0.30)
-run(cma_es, experiment='pop_size-1000+elite-10', population_size=1000, elite_set_ratio=0.10)
-
-# (c) Try different number of generations. What is the minimum number of gener- ations that you can obtain a solution close enough to the global optimum?
-run(cma_es, experiment='iteration-50', iteration=50)
-run(cma_es, experiment='iteration-30', iteration=30)
-
-run(cma_es, experiment='iteration-30+elite-10', elite_set_ratio=0.10, iteration=30)
-run(cma_es, experiment='iteration-50+elite-10', elite_set_ratio=0.10, iteration=50)
-run(cma_es, experiment='iteration-200+pop_size-1000+elite-30', population_size=1000, elite_set_ratio=0.30, iteration=200)
+# run(cem, experiment='iteration-50', iteration=50)
+# run(cem, experiment='iteration-30', iteration=30)
+#
+# run(cem, experiment='iteration-30+elite-10', elite_set_ratio=0.10, iteration=30)
+# run(cem, experiment='iteration-50+elite-10', elite_set_ratio=0.10, iteration=50)
+# run(cem, experiment='iteration-200+pop_size-1000+elite-30', population_size=1000, elite_set_ratio=0.30, iteration=200)
+#
+# # TODO What is the minimum number of generations that you can obtain a solution close enough to the global optimum?
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 3 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+# # # (a) Run NES 3 times for both of test functions with 100-dimensional dim_domain. (i.e. n = 100)
+# # # Note that you can uniformly sample the initial population parameters as long as they are reasonably far from the
+# # # global optimum.
+# run(nes, experiment='baseline')
+#
+# # # (b) Try different population size and learning rate and see what best performance you can obtain.
+# run(nes, experiment='pop_size-100', population_size=100)
+# run(nes, experiment='pop_size-1000', population_size=1000)
+# run(nes, experiment='pop_size-5000', population_size=5000)
+#
+# run(nes, experiment='lr-001', learning_rate=0.001)
+# run(nes, experiment='lr-0001', elite_set_ratio=0.0001)
+# run(nes, experiment='lr-00001', elite_set_ratio=0.00001)
+#
+# run(nes, experiment='pop_size-1000+lr-001', population_size=1000, learning_rate=0.001)
+# run(nes, experiment='pop_size-1000+lr-0001', population_size=1000, learning_rate=0.0001)
+# run(nes, experiment='pop_size-5000+lr-001', population_size=5000, learning_rate=0.001)
+# run(nes, experiment='pop_size-5000+lr-0001', population_size=5000, learning_rate=0.0001)
+#
+# # # (c) Try different number of generations.
+# run(nes, experiment='iteration-2000', iteration=2000)
+# run(nes, experiment='iteration-5000', iteration=5000)
+#
+# run(nes, experiment='iteration-2000+pop_size-1000', population_size=1000, iteration=2000)
+# run(nes, experiment='iteration-5000+pop_size-1000', population_size=1000, iteration=5000)
+#
+# run(nes, experiment='iteration-2000+pop_size-5000', population_size=5000, iteration=2000)
+# run(nes, experiment='iteration-5000+pop_size-5000', population_size=5000, iteration=5000)
+#
+# run(nes, experiment='iteration-2000+pop_size-1000+lr-001', population_size=1000, learning_rate=0.001, iteration=2000)
+# run(nes, experiment='iteration-2000+pop_size-1000+lr-0001', population_size=1000, learning_rate=0.0001, iteration=2000)
+# run(nes, experiment='iteration-2000+pop_size-5000+lr-001', population_size=5000, learning_rate=0.001, iteration=2000)
+# run(nes, experiment='iteration-2000+pop_size-5000+lr-0001', population_size=5000, learning_rate=0.0001, iteration=2000)
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 4 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+# # (a) Run CMA-ES 3 times for both of test functions with 100-dimensional domain. (i.e. n = 100) Note that you can uniformly sample the initial population parameters as long as they are reasonably far from the global optimum.
+# run(cma_es, experiment='baseline')
+#
+# # (b) Try different population size and learning rate and see what best performance you can obtain.
+# run(cma_es, experiment='pop_size-100', population_size=100)
+# run(cma_es, experiment='pop_size-1000', population_size=1000)
+#
+# run(cma_es, experiment='elite-30', elite_set_ratio=0.30)
+# run(cma_es, experiment='elite-10', elite_set_ratio=0.10)
+#
+# run(cma_es, experiment='pop_size-100+elite-30', population_size=100, elite_set_ratio=0.30)
+# run(cma_es, experiment='pop_size-100+elite-10', population_size=100, elite_set_ratio=0.10)
+#
+# run(cma_es, experiment='pop_size-1000+elite-30', population_size=1000, elite_set_ratio=0.30)
+# run(cma_es, experiment='pop_size-1000+elite-10', population_size=1000, elite_set_ratio=0.10)
+#
+# # (c) Try different number of generations. What is the minimum number of gener- ations that you can obtain a solution close enough to the global optimum?
+# run(cma_es, experiment='iteration-50', iteration=50)
+# run(cma_es, experiment='iteration-30', iteration=30)
+#
+# run(cma_es, experiment='iteration-30+elite-10', elite_set_ratio=0.10, iteration=30)
+# run(cma_es, experiment='iteration-50+elite-10', elite_set_ratio=0.10, iteration=50)
+# run(cma_es, experiment='iteration-200+pop_size-1000+elite-30', population_size=1000, elite_set_ratio=0.30, iteration=200)
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # TASK 5 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
