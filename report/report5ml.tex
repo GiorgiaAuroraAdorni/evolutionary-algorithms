@@ -187,10 +187,58 @@ For the rastrigin function evaluate the samples is many more complicated, since 
 \input{cmaes}
 			
 \section{Benchmarking}
-Plot the comparison of CEM, NES and CMA-ES for the best fitness in each generation
+The comparison has been carried out using the following parameters for all algorithms: 
+{domain size dimension} of 100, 5000 {population size}, 2000 {number of generations}, {elite set ratio of 0.20 and  {learning rate} of 1e-3.
+\bigskip 
 
-Plot the comparison of CEM, NES and CMA-ES for the worst fitness in each generation
+In Figures \ref{fig:best-s} and \ref{fig:best-r} are plotted the comparisons of CEM, NES and CMA-ES for the best fitness. 
+\bigskip 
 
-For each test function, which algorithm is best? which is the worst?
+
+Regarding the sphere function, both CEM and CMA-ES perform well, while NES is much slower to converge. 
+Ultimately, CMA-ES is better than CEM for the sphere function with these parameters.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.6\linewidth]{../src/out/comparison/sphere/best-comparison.pdf}	
+	\caption{Comparison of sphere function with algorithm CEM, NES and CMA-ES for the best fitness}
+	\label{fig:best-s}
+\end{figure}
+
+Regarding the rastrigin function, NES is definitely the worst algorithm. It is not able to converge to the global optimum.
+Both CEM and CMA-ES perform well.
+Initially, CEM goes down faster to the minimum, although it is not able to converge to 0 with these parameters, remaining only very close to the optimum. 
+With about 200 iterations, CMA-ES converges to the global optimum, so it is certainly the best algorithm for this test function.
+
+\bigskip
+
+In Figures \ref{fig:best-s} and \ref{fig:best-r} are plotted the comparisons of CEM, NES and CMA-ES for the worst fitness. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.6\linewidth]{../src/out/comparison/rastrigin/best-comparison.pdf}	
+	\caption{Comparison of CEM, NES and CMA-ES for the best rastrigin fitness}
+	\label{fig:best-r}
+\end{figure}
+
+Regarding the sphere function, the algorithms behave as in the case of best fitness. Both CEM and CMA-ES perform well, while NES is much slower to converge. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.6\linewidth]{../src/out/comparison/sphere/worst-comparison.pdf}	
+	\caption{Comparison of sphere function with algorithm CEM, NES and CMA-ES for the worse fitness}
+	\label{fig:worst-s}
+\end{figure}
+
+
+Also for the rastrigin function, the algorithms behave as in the case of best fitness. NES is definitely the worst algorithm. It is not able to converge to the global optimum.
+Both CEM and CMA-ES perform well, although CMA-ES converges to the global optimum in about 150 generations.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.6\linewidth]{../src/out/comparison/rastrigin/worst-comparison.pdf}	
+	\caption{Comparison of CEM, NES and CMA-ES for the worse rastrigin fitness}
+	\label{fig:worst-r}
+\end{figure}
 
 \end{document}

@@ -67,7 +67,7 @@ In Tables \ref{tab:cmaes-performance-s} and \ref{tab:cmaes-performance-r} are su
 		
 		\bottomrule
 	\end{tabular}
-	\captionof{table}{Sphere CME-AS performance}
+	\captionof{table}{Sphere CMA-ES performance}
 	\label{tab:cmaes-performance-s}
 \end{figure}
 
@@ -121,7 +121,7 @@ For the rastrigin function, it is necessary not only to increase the size of the
 		\texttt{iter-200+pop\_size-3000+elite-30} 	 &	101.37 &	 103.35 &	  6.42 sec \\
 		\bottomrule
 	\end{tabular}
-	\captionof{table}{Rastrigin CME-AS performance}
+	\captionof{table}{Rastrigin CMA-ES performance}
 	\label{tab:cmaes-performance-r}
 \end{figure}
 
@@ -149,6 +149,54 @@ In Figure \ref{fig:cmaes-r-fitness/baseline} is plotted the best and the worse f
 	\label{fig:cmaes-r-fitness/3000iter}
 \end{figure}
 
+In the following Figures is shown the effect of executing the algorithm on the experiment \texttt{pop\_size-3000+iter-200+elite-30}. 
+\begin{figure}[H]
+	\begin{minipage}[b]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/cma_es/pop_size-3000+iter-200+elite-30/rastrigin/cma_es-generation-contour-0.pdf}	
+	\end{minipage}
+	~
+	\begin{minipage}[b]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/cma_es/pop_size-3000+iter-200+elite-30/rastrigin/cma_es-generation-contour-20.pdf}	
+	\end{minipage}
+	~
+	\begin{minipage}[b]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/cma_es/pop_size-3000+iter-200+elite-30/rastrigin/cma_es-generation-contour-40.pdf}	
+	\end{minipage}
+	
+	\begin{minipage}[b]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/cma_es/pop_size-3000+iter-200+elite-30/rastrigin/cma_es-generation-contour-60.pdf}	
+	\end{minipage}
+	~
+	\begin{minipage}[b]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/cma_es/pop_size-3000+iter-200+elite-30/rastrigin/cma_es-generation-contour-80.pdf}	
+	\end{minipage}
+	~
+	\begin{minipage}[b]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/cma_es/pop_size-3000+iter-200+elite-30/rastrigin/cma_es-generation-contour-100.pdf}	
+	\end{minipage}
+	
+	\begin{minipage}[b]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/cma_es/pop_size-3000+iter-200+elite-30/rastrigin/cma_es-generation-contour-120.pdf}	
+	\end{minipage}
+	~
+	\begin{minipage}[b]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/cma_es/pop_size-3000+iter-200+elite-30/rastrigin/cma_es-generation-contour-140.pdf}	
+	\end{minipage}
+	~
+	\begin{minipage}[b]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/cma_es/pop_size-3000+iter-200+elite-30/rastrigin/cma_es-generation-contour-160.pdf}	
+	\end{minipage}
+	
+\end{figure}
 
 For the sphere function, 40 generations are enough to obtain a solution close enough to the global optimum, as shown for the experiment \texttt{pop\_size-3000}.
 

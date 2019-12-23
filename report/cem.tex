@@ -101,6 +101,54 @@ Moreover, increasing the elite set ratio the algorithm converges quickly.
 	 \label{fig:cem-s-fitness/200}
 \end{figure}
 
+In the following Figures is shown the effect of executing the algorithm on the experiment \texttt{pop\_size-1000}. 
+ \begin{figure}[H]
+	\begin{minipage}[b]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/cem/pop_size-1000/sphere/cem-generation-contour-0.pdf}	
+	\end{minipage}
+	~
+	\begin{minipage}[b]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/cem/pop_size-1000/sphere/cem-generation-contour-10.pdf}	
+	\end{minipage}
+	~
+	\begin{minipage}[b]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/cem/pop_size-1000/sphere/cem-generation-contour-20.pdf}	
+	\end{minipage}
+
+	\begin{minipage}[b]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/cem/pop_size-1000/sphere/cem-generation-contour-30.pdf}	
+	\end{minipage}
+	~
+	\begin{minipage}[b]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/cem/pop_size-1000/sphere/cem-generation-contour-40.pdf}	
+	\end{minipage}
+	~
+	\begin{minipage}[b]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/cem/pop_size-1000/sphere/cem-generation-contour-50.pdf}	
+	\end{minipage}
+	
+		\begin{minipage}[b]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/cem/pop_size-1000/sphere/cem-generation-contour-60.pdf}	
+	\end{minipage}
+	~
+	\begin{minipage}[b]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/cem/pop_size-1000/sphere/cem-generation-contour-70.pdf}	
+	\end{minipage}
+	~
+	\begin{minipage}[b]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{../src/out/cem/pop_size-1000/sphere/cem-generation-contour-80.pdf}	
+	\end{minipage}
+	
+\end{figure}
 
 For the rastrigin function, it is necessary not only to increase the size of the population but also the number of generations to allow the algorithm to converge. Moreover, in this case, by decreasing the elite set ratio the algorithm performs better.  
 
@@ -133,7 +181,7 @@ For the rastrigin function, it is necessary not only to increase the size of the
 	\captionof{table}{Rastrigin CEM performance}
 	\label{tab:cem-performance-r}
 \end{figure}
-
+\bigskip
 
 In Figure \ref{fig:cem-r-fitness/baseline} is plotted the best and the worse fitness for each generation (averaged over 3 runs) for the baseline model. Below, in Figure \ref{fig:cem-r-fitness/1000} and \ref{fig:cem-r-fitness/200}, are plotted the fitness of the two models that perform better with the rastrigin function.
 
@@ -145,14 +193,16 @@ In Figure \ref{fig:cem-r-fitness/baseline} is plotted the best and the worse fit
 	\caption{Sphere fitness \texttt{baseline}}
 	\label{fig:cem-r-fitness/baseline}
 \end{figure}
-\begin{figure}[H]
+\begin{figure}[htb]
 	\centering
 	\begin{minipage}[b]{.6\textwidth}
 		\includegraphics[width=\linewidth]{../src/out/cem/pop_size-1000+elite-10/rastrigin/fitness.pdf}	
 	\end{minipage}
 	\caption{Sphere fitness \texttt{pop\_size-1000}}
 	\label{fig:cem-r-fitness/1000}
-	
+\end{figure}
+\begin{figure}[htb]
+	\centering	
 	\begin{minipage}[b]{.6\textwidth}
 		\includegraphics[width=\linewidth]{../src/out/cem/pop_size-3000+iter-200+elite-30/rastrigin/fitness.pdf}	
 	\end{minipage}
@@ -160,7 +210,7 @@ In Figure \ref{fig:cem-r-fitness/baseline} is plotted the best and the worse fit
 	\label{fig:cem-r-fitness/200}
 \end{figure}
 
-
+\bigskip
 For the sphere function, 40 generations are enough to obtain a solution close enough to the global optimum, as shown for the experiment \texttt{pop\_size-1000}.
 
 For the rastrigin function and the parameter tested, at least 200 generations are necessary to obtain a solution close enough to the global optimum, as shown for the experiment \texttt{iter-200+elite-30}.
